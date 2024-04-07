@@ -118,32 +118,52 @@ if deleted_element is not None:
 
 
 #get
-def get_element_heap(hT, index):
-    if index < 0 or index >= len(hT):
-        print("Index out of bounds")
+def get_element_heap(hT,col,val):
+    basedOn = 1
+    if col == "Id":
+        basedOn = 2
+    index = None
+    for i in range(len(hT)):
+        if hT[i][basedOn] == val:
+            index = i
+            break
+    
+    if index is None:
+        print("Element not found in the heap")
         return None
+    
     return hT[index]
 
 # Example usage:
 # Assuming heap_tree is already populated
-index_to_get = 5  # Example index to retrieve
-retrieved_element = get_element_heap(heap_tree, index_to_get)
+el_to_get = 105  # Example index to retrieve
+retrieved_element = get_element_heap(heap_tree,"Id", el_to_get)
 if retrieved_element is not None:
-    print("Retrieved element at index", index_to_get, ":", retrieved_element)
+    print("Retrieved element :", retrieved_element)
 
 
 
 #update
-def update_element_heap(hT, index, new_value):
-    if index < 0 or index >= len(hT):
-        print("Index out of bounds")
-        return False
+def update_element_heap(hT,col,val,update_col, new_value):
+    basedOn = 1
+    if col == "Id":
+        basedOn = 2
+    index = None
+    for i in range(len(hT)):
+        if hT[i][basedOn] == val:
+            index = i
+            break
+    if index is None:
+        print("Element not found in the heap")
+        return None
     
     old_value = hT[index]
-    hT[index] = new_value
+    updated_element = list(old_value)
+    updated_element[update_col] = new_value
+    hT[index] = tuple(updated_element)
 
     # If the new value is greater, perform heapify up, otherwise heapify down
-    if new_value[0] > old_value[0]:
+    if hT[index][0] > old_value[0]:
         heapify_up(hT, index)
     else:
         heapify_down(hT, index)
@@ -152,11 +172,11 @@ def update_element_heap(hT, index, new_value):
 
 # Example usage:
 # Assuming heap_tree is already populated
-index_to_update = 0  # Example index to update
-new_value = (5, "Updated Name", 105, "Updated Grade", "Updated Department")  # Example new value
-success = update_element_heap(heap_tree, index_to_update, new_value)
+el_to_update = 105  # Example index to update
+new_value = "Updated Name"  # Example new value
+success = update_element_heap(heap_tree,"Id",el_to_update, 1, new_value)
 if success:
-    print("Updated element at index", index_to_update, "with new value:", new_value)
+    print("Updated element with new value:", new_value)
     print("Heap after update:")
     print(heap_tree)
 else:
