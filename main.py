@@ -16,7 +16,7 @@ def print_array(hT):
 
 
 
-heap_tree = []
+
 
 # data = [
 #     (1, "John Smith", 101, "Freshman", "Engineering"),
@@ -31,29 +31,30 @@ heap_tree = []
 #     (2, "Olivia Garcia", 110, "Sophomore", "Engineering")
 # ]
 
-fileInput = []
-fileData = []
+def makeheap():
+    heap_tree = []
+    fileInput = []
+    fileData = []
 
-with open ("student_records.csv") as f :
-    lines = f . readlines ()
-    for line in lines :
-        line = line . strip () # remove leading and trailing spaces
-        tokens = line . split (",") # split the line into tokens
-        fileInput . append ( tokens) # add the first token to the
+    with open ("student_records.csv") as f :
+        lines = f . readlines ()
+        for line in lines :
+            line = line . strip () # remove leading and trailing spaces
+            tokens = line . split (",") # split the line into tokens
+            fileInput . append ( tokens) # add the first token to the
+        
+    for i in range(1,len(fileInput)):
+        fileInput[i][0] = int(fileInput[i][0])
+        fileInput[i][2] = int(fileInput[i][2])
+        fileData.append(tuple(fileInput[i]))
+
+
+    for item in fileData:
+        insert_heap_tree(heap_tree, item)
     
-for i in range(1,len(fileInput)):
-    fileInput[i][0] = int(fileInput[i][0])
-    fileInput[i][2] = int(fileInput[i][2])
-    fileData.append(tuple(fileInput[i]))
+    return heap_tree
 
-
-
-
-
-for item in fileData:
-    insert_heap_tree(heap_tree, item)
-
-
+heap_tree = makeheap()
 
 print("Heap after insertion:")
 
@@ -106,14 +107,14 @@ def heapify_down(hT, i):
         hT[i], hT[largest] = hT[largest], hT[i]
         heapify_down(hT, largest)
 
-# Example usage:
-# Assuming heap_tree is already populated
-element_to_delete = 108  # Example element to delete
-deleted_element = delete_element_heap(heap_tree,"Id", element_to_delete)
-if deleted_element is not None:
-    print("Deleted element:", deleted_element)
-    print("Heap after deletion:")
-    print(heap_tree)
+# # Example usage:
+# # Assuming heap_tree is already populated
+# element_to_delete = 108  # Example element to delete
+# deleted_element = delete_element_heap(heap_tree,"Id", element_to_delete)
+# if deleted_element is not None:
+#     print("Deleted element:", deleted_element)
+#     print("Heap after deletion:")
+#     print(heap_tree)
 
 
 
@@ -134,12 +135,12 @@ def get_element_heap(hT,col,val):
     
     return hT[index]
 
-# Example usage:
-# Assuming heap_tree is already populated
-el_to_get = 105  # Example index to retrieve
-retrieved_element = get_element_heap(heap_tree,"Id", el_to_get)
-if retrieved_element is not None:
-    print("Retrieved element :", retrieved_element)
+# # Example usage:
+# # Assuming heap_tree is already populated
+# el_to_get = 105  # Example index to retrieve
+# retrieved_element = get_element_heap(heap_tree,"Id", el_to_get)
+# if retrieved_element is not None:
+#     print("Retrieved element :", retrieved_element)
 
 
 
@@ -170,15 +171,15 @@ def update_element_heap(hT,col,val,update_col, new_value):
     
     return True
 
-# Example usage:
-# Assuming heap_tree is already populated
-el_to_update = 105  # Example index to update
-new_value = "Updated Name"  # Example new value
-success = update_element_heap(heap_tree,"Id",el_to_update, 1, new_value)
-if success:
-    print("Updated element with new value:", new_value)
-    print("Heap after update:")
-    print(heap_tree)
-else:
-    print("Update failed.")
+# # Example usage:
+# # Assuming heap_tree is already populated
+# el_to_update = 105  # Example index to update
+# new_value = "Updated Name"  # Example new value
+# success = update_element_heap(heap_tree,"Id",el_to_update, 1, new_value)
+# if success:
+#     print("Updated element with new value:", new_value)
+#     print("Heap after update:")
+#     print(heap_tree)
+# else:
+#     print("Update failed.")
 

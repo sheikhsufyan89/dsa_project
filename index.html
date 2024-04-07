@@ -3,73 +3,41 @@
 <head>
     <meta charset="UTF-8" />
     <title>Login</title>
-    
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
-            font-family: Arial, sans-serif;
-        }
-        .login-container {
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 5px;
-            width: 500px;
-            height: max-content;
-        }
-        .login-container form {
-            display: flex;
-            flex-direction: column;
-        }
-        .login-container label {
-            margin-bottom: 5px;
-        }
-        .login-container input[type="text"], .login-container input[type="password"] {
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-        .login-container input[type="button"] {
-            padding: 10px;
-            background-color: #007BFF;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .login-container input[type="button"]:hover {
-            background-color: #0056b3;
-        }
-    </style>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-        <link rel="stylesheet" href="https://pyscript.net/releases/2024.3.2/core.css">
-      <script type="module" src="https://pyscript.net/releases/2024.3.2/core.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://pyscript.net/releases/2024.3.2/core.css">
+    <script type="module" src="https://pyscript.net/releases/2024.3.2/core.js"></script>
+    <link href="style.css" rel="stylesheet" />
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </head>
 <body>
-<div class="login-container">
-    <form action="/login" method="post">
-        <label for="username">Username:</label><br>
-        <input type="text" id="username" name="username" required><br>
-        <label for="password">Password:</label><br>
-        <input type="password" id="password" name="password" required><br>
-        <input id="lgnbtn" type="button" value="Login" py-click="showSpin">
-        <div id="spinnerdiv" style="display: none;" class="mt-2 justify-content-center">
-            <div  class="spinner-border" role="status">
-              <span class="sr-only">Loading...</span>
-            </div>
-        </div>
-    </form>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Enrollment</a>
+        
+    </nav>
+<div class="contains">
+    <div class="login-container">
+        <form action="/login" method="post">
+            <label for="username">Username:</label><br>
+            <input type="text" id="username" name="username" required><br>
+            <label for="password">Password:</label><br>
+            <input type="password" id="password" name="password" required><br>
+            <input id="lgnbtn" type="button" value="Login" py-click="login">
+
+        </form>
+    </div>
+    <div id="StuPage" >
+    
+
+    </div>
 </div>
 
+
 <section class="pyscript">
-    <script type="py" src="./pyscript.py" config="./pyscript.json"></script>
+    <py-config>
+        [[fetch]]
+        files = ['student_records.csv'] # This is a relative URL; you can also use a fully qualified URL
+    </py-config>
+    <script type="py" src="./pyscript.py" ></script>
 </section>
 </body>
 </html></div>

@@ -1,0 +1,113 @@
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table th,
+table td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+table th {
+    background-color: #f2f2f2;
+}
+body {
+    background-color: #f1f1f1;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+}
+
+.navbar a {
+    color: #fff;
+    text-decoration: none;
+    margin-right: 10px;
+}
+
+.navbar a:hover {
+    text-decoration: underline;
+}
+
+.contains{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+
+}
+.login-container {
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    width: 500px;
+    height: max-content;
+    
+
+}
+.login-container form {
+    display: flex;
+    flex-direction: column;
+}
+.login-container label {
+    margin-bottom: 5px;
+}
+.login-container input[type="text"], .login-container input[type="password"] {
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+.login-container input[type="button"] {
+    padding: 10px;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.login-container input[type="button"]:hover {
+    background-color: #0056b3;
+}
+
+
+#StuPage {
+    display: none;
+    flex-direction: column;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    width: 500px;
+    height: max-content;
+}
+#StuPage input[type="text"], #StuPage input[type="password"] {
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+#StuPage input[type="button"] {
+    padding: 10px;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+#StuPage input[type="button"]:hover {
+    background-color: #0056b3;
+}
