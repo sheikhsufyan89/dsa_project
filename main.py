@@ -18,19 +18,18 @@ def print_array(hT):
 
 heap_tree = []
 
-
-data = [
-    (1, "John Smith", 101, "Freshman", "Engineering"),
-    (2, "Emma Johnson", 102, "Sophomore", "Humanities"),
-    (3, "Michael Brown", 103, "Junior", "Engineering"),
-    (4, "Sarah Lee", 104, "Senior", "Humanities"),
-    (1, "David Rodriguez", 105, "Freshman", "Engineering"),
-    (2, "Emily Wilson", 106, "Sophomore", "Engineering"),
-    (3, "Daniel Martinez", 107, "Junior", "Humanities"),
-    (4, "Sophia Anderson", 108, "Senior", "Engineering"),
-    (1, "James Thompson", 109, "Freshman", "Humanities"),
-    (2, "Olivia Garcia", 110, "Sophomore", "Engineering")
-]
+# data = [
+#     (1, "John Smith", 101, "Freshman", "Engineering"),
+#     (2, "Emma Johnson", 102, "Sophomore", "Humanities"),
+#     (3, "Michael Brown", 103, "Junior", "Engineering"),
+#     (4, "Sarah Lee", 104, "Senior", "Humanities"),
+#     (1, "David Rodriguez", 105, "Freshman", "Engineering"),
+#     (2, "Emily Wilson", 106, "Sophomore", "Engineering"),
+#     (3, "Daniel Martinez", 107, "Junior", "Humanities"),
+#     (4, "Sophia Anderson", 108, "Senior", "Engineering"),
+#     (1, "James Thompson", 109, "Freshman", "Humanities"),
+#     (2, "Olivia Garcia", 110, "Sophomore", "Engineering")
+# ]
 
 fileInput = []
 fileData = []
@@ -43,27 +42,33 @@ with open ("student_records.csv") as f :
         fileInput . append ( tokens) # add the first token to the
     
 for i in range(1,len(fileInput)):
+    fileInput[i][0] = int(fileInput[i][0])
+    fileInput[i][2] = int(fileInput[i][2])
     fileData.append(tuple(fileInput[i]))
-# print(fileData)
 
 
 
-for item in data:
+
+
+for item in fileData:
     insert_heap_tree(heap_tree, item)
 
 
 
 print("Heap after insertion:")
-# print_array(heap_tree)
+
 print(heap_tree)
 
 
 
 #delete
-def delete_element_heap(hT, val):
+def delete_element_heap(hT,col, val):
+    basedOn = 1
+    if col == "Id":
+        basedOn = 2
     index = None
     for i in range(len(hT)):
-        if hT[i] == val:
+        if hT[i][basedOn] == val:
             index = i
             break
     
@@ -103,8 +108,8 @@ def heapify_down(hT, i):
 
 # Example usage:
 # Assuming heap_tree is already populated
-element_to_delete = (4, "Sophia Anderson", 108, "Senior", "Engineering")  # Example element to delete
-deleted_element = delete_element_heap(heap_tree, element_to_delete)
+element_to_delete = 108  # Example element to delete
+deleted_element = delete_element_heap(heap_tree,"Id", element_to_delete)
 if deleted_element is not None:
     print("Deleted element:", deleted_element)
     print("Heap after deletion:")
