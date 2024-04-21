@@ -202,15 +202,167 @@ class Ui_MainWindow(QtWidgets.QDialog):
     def __init__(self):
         super(Ui_MainWindow,self).__init__()
         loadUi("RO.ui",self)
-    
-   
+        self.genBtn.clicked.connect(self.generate)
+        self.tableWidget = self.findChild(QtWidgets.QTableWidget, 'tableWidget')
+        self.tableWidget.setHidden(True)
+        self.LogoutBtn.clicked.connect(self.logout)
+        self.cap = self.findChild(QtWidgets.QLineEdit, 'ECap')
+        self.enrollBtn = self.findChild(QtWidgets.QPushButton, 'enrollBtn')
+        self.enrollBtn.clicked.connect(lambda: self.enroll(self.cap))
+        self.enrollBtn.setProperty("enabled", False)
+        # self.deleteBtn = self.findChild(QtWidgets.QPushButton, 'deleteBtn')
+        # self.getBtn = self.findChild(QtWidgets.QPushButton, 'getBtn')
+        # self.updateBtn = self.findChild(QtWidgets.QPushButton, 'updateBtn')
+        # self.deleteBtn.clicked.connect(self.delete)
+        # self.getBtn.clicked.connect(self.get)
+        # self.updateBtn.clicked.connect(self.update)
 
+    def logout(self):
+        widget.setCurrentIndex(0)
+
+    def delete(self):
+        id = self.id.text()
+        deleted_element = delete_element_heap(heap_tree,"Id", int(id))
+        if deleted_element is not None:
+            print("Deleted element:", deleted_element)
+            print("Heap after deletion:")
+            print_array(heap_tree)
+            self.generate()
+        else:
+            print("Element not found in the heap")
+
+    def get(self):
+        id = self.id.text()
+        retrieved_element = get_element_heap(heap_tree,"Id", int(id))
+        if retrieved_element is not None:
+            print("Retrieved element :", retrieved_element)
+        else:
+            print("Element not found in the heap")
+
+    def update(self):
+        id = self.id.text()
+        name = self.name.text()
+        year = self.year.text()
+        school = self.school.text()
+        success = update_element_heap(heap_tree,"Id",int(id), 1, name)
+        success = update_element_heap(heap_tree,"Id",int(id), 2, int(year))
+        success = update_element_heap(heap_tree,"Id",int(id), 3, school)
+        if success:
+            print("Updated element with new value:", name)
+            print("Heap after update:")
+            print_array(heap_tree)
+            self.generate()
+        else:
+            print("Update failed.")
+
+    def enroll(self, cap):
+        if cap.text() == "":
+            return
+        cap = int(cap.text())
+        if(cap > len(heap_tree)):
+            print("Not enough students to enroll")
+            return
+        elif(cap <= 0):
+            print("Invalid capacity")
+            return
+        else:
+            self.tableWidget.setRowCount(0)
+            for i in range(cap):
+                self.tableWidget.insertRow(i)
+                for j in range(1,5):
+                    self.tableWidget.setItem(i,j-1,QtWidgets.QTableWidgetItem(str(heap_tree[i][j])))
+            self.tableWidget.setHorizontalHeaderLabels([ "Name", "Id", "Year", "School"])
+
+
+    def generate(self):
+        self.tableWidget.setRowCount(0)
+        for i in range(len(heap_tree)):
+            self.tableWidget.insertRow(i)
+            for j in range(1,5):
+                self.tableWidget.setItem(i,j-1,QtWidgets.QTableWidgetItem(str(heap_tree[i][j])))
+
+        self.tableWidget.setHorizontalHeaderLabels([ "Name", "Id", "Year", "School"])
+        self.tableWidget.setHidden(False)
+        self.enrollBtn.setProperty("enabled", True)
+        
+class Login(QtWidgets.QDialog):
+    def __init__(self):
+        super(Login,self).__init__()
+        loadUi("Login.ui",self)
+        self.Student.clicked.connect(self.stu)
+        self.Teacher.clicked.connect(self.teach)
+        self.Admin.clicked.connect(self.admin)
+
+    def stu(self):
+        widget.setCurrentIndex(1)
+    
+    def teach(self):
+        widget.setCurrentIndex(2)
+
+    def admin(self):
+        widget.setCurrentIndex(3)
+        
+    pass
+        
+class StudentLogin(QtWidgets.QDialog):
+    def __init__(self):
+        super(StudentLogin,self).__init__()
+        loadUi("LoginAll.ui",self)
+        self.Login.clicked.connect(self.login)
+        self.Back.clicked.connect(self.back)
+
+    def back(self):
+        widget.setCurrentIndex(0)
+        
+    def login(self):
+        widget.setCurrentIndex(4)
+        
+    pass
+
+class TeacherLogin(QtWidgets.QDialog):
+    def __init__(self):
+        super(TeacherLogin,self).__init__()
+        loadUi("LoginAll.ui",self)
+        self.Login.clicked.connect(self.login)
+        self.Back.clicked.connect(self.back)
+
+    def back(self):
+        widget.setCurrentIndex(0)
+        
+        
+    def login(self):
+        widget.setCurrentIndex(4)
+        
+    pass
+
+class AdminLogin(QtWidgets.QDialog):
+    def __init__(self):
+        super(AdminLogin,self).__init__()
+        loadUi("LoginAll.ui",self)
+        self.Login.clicked.connect(self.login)
+        self.Back.clicked.connect(self.back)
+
+    def back(self):
+        widget.setCurrentIndex(0)
+        
+    def login(self):
+        widget.setCurrentIndex(4)
+        
+    pass
 
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     widget = QtWidgets.QStackedWidget()
     ui = Ui_MainWindow()
+    login = Login()
+    student = StudentLogin()
+    teacher = TeacherLogin()
+    admin = AdminLogin()
+    widget.addWidget(login)
+    widget.addWidget(student)
+    widget.addWidget(teacher)
+    widget.addWidget(admin)
     widget.addWidget(ui)
     widget.setFixedWidth(500)
     widget.setFixedHeight(700)

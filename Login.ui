@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>500</width>
+    <height>700</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(50, 50, 50);
+QHBoxLayout{
+background-color: rgb(30,30,30);
+}</string>
+  </property>
+  <widget class="QWidget" name="horizontalLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>250</y>
+     <width>481</width>
+     <height>131</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="QPushButton" name="Admin">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>40</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton{
+background-color: rgb(100 ,100,100);border: 2px solid rgb(60, 60, 60);border-radius: 5px;color:rgb(255,255,255)
+}
+QPushButton:hover{
+background-color: rgb(120 ,120,120);border: 2px solid rgb(60, 60, 60);border-radius: 5px;color:rgb(255,255,255)
+}</string>
+      </property>
+      <property name="text">
+       <string>Admin</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="Student">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>40</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton{
+background-color: rgb(100 ,100,100);border: 2px solid rgb(60, 60, 60);border-radius: 5px;color:rgb(255,255,255)
+}
+QPushButton:hover{
+background-color: rgb(120 ,120,120);border: 2px solid rgb(60, 60, 60);border-radius: 5px;color:rgb(255,255,255)
+}</string>
+      </property>
+      <property name="text">
+       <string>Student</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="Teacher">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>40</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton{
+background-color: rgb(100 ,100,100);border: 2px solid rgb(60, 60, 60);border-radius: 5px;color:rgb(255,255,255)
+}
+QPushButton:hover{
+background-color: rgb(120 ,120,120);border: 2px solid rgb(60, 60, 60);border-radius: 5px;color:rgb(255,255,255)
+}</string>
+      </property>
+      <property name="text">
+       <string>Teacher</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
