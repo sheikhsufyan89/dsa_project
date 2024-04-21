@@ -73,6 +73,7 @@ def makeheap():
 heap_tree = makeheap()
 enrollment_cap = len(heap_tree)
 enrolled_Ids = []
+enrolled_Students = []
 
 print("Heap after insertion:")
 
@@ -202,6 +203,8 @@ def update_element_heap(hT,col,val,update_col, new_value):
 #     print("Update failed.")
 
 class Ui_MainWindow(QtWidgets.QDialog):
+
+
     def __init__(self):
         super(Ui_MainWindow,self).__init__()
         loadUi("RO.ui",self)
@@ -319,12 +322,18 @@ class Ui_MainWindow(QtWidgets.QDialog):
     def enroll_helper(self,cap):
         enrollment_cap = cap
         enrolled_Ids.clear()
+        enrolled_Students.clear()
         self.tableWidget.setRowCount(0)
         for i in range(cap):
+            max_element = heap_tree[0]
             self.tableWidget.insertRow(i)
-            enrolled_Ids.append(heap_tree[i][2])
             for j in range(1,5):
-                self.tableWidget.setItem(i,j-1,QtWidgets.QTableWidgetItem(str(heap_tree[i][j])))
+                self.tableWidget.setItem(i,j-1,QtWidgets.QTableWidgetItem(str(max_element[j])))
+            enrolled_Ids.append(max_element[2])
+            enrolled_Students.append(max_element)
+            print("Max element:", max_element)
+            # Remove the max element from the heap
+            delete_element_heap(heap_tree, "Id", max_element[2])
         self.tableWidget.setHorizontalHeaderLabels([ "Name", "Id", "Year", "School"])
         self.genBtn.setProperty("text", "Regenerate Table from Database")
         self.addBtn.setHidden(True)
@@ -333,24 +342,33 @@ class Ui_MainWindow(QtWidgets.QDialog):
 
         print("Enrolled students:")
         print(enrolled_Ids)
-        print_array(heap_tree[:cap])
+        print_array(enrolled_Students)
         print("Enrollment cap:", enrollment_cap)
 
     def enroll(self, cap):
+        print(heap_tree)
         if cap.text() == "":
             return
         cap = int(cap.text())
         if(cap > len(heap_tree)):
             cap = len(heap_tree)
             self.enroll_helper(cap)
+            self.enrollBtn.setProperty("enabled", False)
         elif(cap <= 0):
             print("Invalid capacity")
             return
         else:
             self.enroll_helper(cap)
+            self.enrollBtn.setProperty("enabled", False)
 
 
     def generate(self):
+        if self.genBtn.text() == "Regenerate Table from Database":
+            for i in range(len(enrolled_Students)):
+                insert_heap_tree(heap_tree, enrolled_Students[i])
+        enrolled_Students.clear()
+        enrolled_Ids.clear()
+
         self.tableWidget.setRowCount(0)
         for i in range(len(heap_tree)):
             self.tableWidget.insertRow(i)
