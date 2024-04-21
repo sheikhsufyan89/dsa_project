@@ -23,7 +23,7 @@
    <bool>false</bool>
   </property>
   <property name="styleSheet">
-   <string notr="true"/>
+   <string notr="true">font-size: 14px;</string>
   </property>
   <widget class="QPushButton" name="LogoutBtn">
    <property name="geometry">
@@ -150,7 +150,7 @@ color: rgb(255,255,255);</string>
       </property>
       <property name="font">
        <font>
-        <pointsize>9</pointsize>
+        <pointsize>-1</pointsize>
        </font>
       </property>
       <property name="mouseTracking">
@@ -185,7 +185,7 @@ background-color: rgb(120 ,120,120);border: 2px solid rgb(60, 60, 60);border-rad
       </property>
       <property name="font">
        <font>
-        <pointsize>9</pointsize>
+        <pointsize>-1</pointsize>
        </font>
       </property>
       <property name="mouseTracking">
@@ -226,7 +226,7 @@ background-color: rgb(120 ,120,120);border: 2px solid rgb(60, 60, 60);border-rad
         <property name="font">
          <font>
           <family>Roboto</family>
-          <pointsize>10</pointsize>
+          <pointsize>-1</pointsize>
          </font>
         </property>
         <property name="styleSheet">
@@ -253,7 +253,7 @@ color:white
         <property name="font">
          <font>
           <family>Roboto</family>
-          <pointsize>10</pointsize>
+          <pointsize>-1</pointsize>
          </font>
         </property>
         <property name="styleSheet">
@@ -351,7 +351,7 @@ color:white
    <property name="font">
     <font>
      <family>Roboto</family>
-     <pointsize>13</pointsize>
+     <pointsize>-1</pointsize>
      <weight>75</weight>
      <bold>true</bold>
     </font>

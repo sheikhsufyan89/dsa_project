@@ -10,7 +10,8 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.uic import loadUi
 import sys
-
+import os
+os.environ['QT_AUTO_SCREEN_SCALE_FACTOR'] = '1'
 
 
 def insert_heap_tree(hT, val):
