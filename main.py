@@ -70,6 +70,8 @@ def makeheap():
     return heap_tree
 
 heap_tree = makeheap()
+enrollment_cap = len(heap_tree)
+enrolled_Ids = []
 
 print("Heap after insertion:")
 
@@ -266,12 +268,18 @@ class Ui_MainWindow(QtWidgets.QDialog):
             print("Invalid capacity")
             return
         else:
+            enrollment_cap = cap
+            enrolled_Ids.clear()
             self.tableWidget.setRowCount(0)
             for i in range(cap):
                 self.tableWidget.insertRow(i)
+                enrolled_Ids.append(heap_tree[i][2])
                 for j in range(1,5):
                     self.tableWidget.setItem(i,j-1,QtWidgets.QTableWidgetItem(str(heap_tree[i][j])))
             self.tableWidget.setHorizontalHeaderLabels([ "Name", "Id", "Year", "School"])
+            print("Enrolled students:")
+            print(enrolled_Ids)
+            print_array(heap_tree[:cap])
 
 
     def generate(self):
