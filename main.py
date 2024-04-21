@@ -207,31 +207,63 @@ class Ui_MainWindow(QtWidgets.QDialog):
         self.genBtn.clicked.connect(self.generate)
         self.tableWidget = self.findChild(QtWidgets.QTableWidget, 'tableWidget')
         self.tableWidget.setHidden(True)
+        self.genBTn = self.findChild(QtWidgets.QPushButton, 'genBtn')
         self.LogoutBtn.clicked.connect(self.logout)
         self.cap = self.findChild(QtWidgets.QLineEdit, 'ECap')
         self.enrollBtn = self.findChild(QtWidgets.QPushButton, 'enrollBtn')
         self.enrollBtn.clicked.connect(lambda: self.enroll(self.cap))
         self.enrollBtn.setProperty("enabled", False)
-        # self.deleteBtn = self.findChild(QtWidgets.QPushButton, 'deleteBtn')
-        # self.getBtn = self.findChild(QtWidgets.QPushButton, 'getBtn')
-        # self.updateBtn = self.findChild(QtWidgets.QPushButton, 'updateBtn')
-        # self.deleteBtn.clicked.connect(self.delete)
-        # self.getBtn.clicked.connect(self.get)
-        # self.updateBtn.clicked.connect(self.update)
+        self.deleteBtn = self.findChild(QtWidgets.QPushButton, 'deleteBtn')
+        self.addBtn = self.findChild(QtWidgets.QPushButton, 'addBtn')
+        self.edit = self.findChild(QtWidgets.QPushButton, 'editBtn')
+        self.deleteBtn.setHidden(True)
+        self.addBtn.setHidden(True)
+        self.edit.setHidden(True)
+        self.deleteBtn.clicked.connect(self.delete)
+        self.addBtn.clicked.connect(self.add)
+        self.edit.clicked.connect(self.update)
 
     def logout(self):
         widget.setCurrentIndex(0)
 
+    def add(self):
+        inputDialog = QtWidgets.QInputDialog()
+        name, ok = inputDialog.getText(self, 'Input Dialog', 'Enter name:', )
+        if ok:
+            id, ok = inputDialog.getText(self, 'Input Dialog', 'Enter id:')
+            item = get_element_heap(heap_tree,"Id", int(id))
+            if ok and item is None:
+                year, ok = inputDialog.getItem(self, 'Input Dialog', 'Select year:', ('Freshman', 'Sophomore', 'Junior', 'Senior'), 0, False)
+                if ok:
+                    school, ok = inputDialog.getItem(self, 'Input Dialog', 'Select school:', ('Engineering', 'Humanities'), 0, False)
+                    if ok:
+                        priority = 1
+                        id = int(id)
+                        if year == 'Freshman':
+                            priority = 1
+                        elif year == 'Sophomore':
+                            priority = 2
+                        elif year == 'Junior':
+                            priority = 3
+                        elif year == 'Senior':
+                            priority = 4
+                        insert_heap_tree(heap_tree, (priority, name, id, year, school))
+                        print("Heap after insertion:")
+                        print_array(heap_tree)
+                        self.generate()
+
+
     def delete(self):
-        id = self.id.text()
-        deleted_element = delete_element_heap(heap_tree,"Id", int(id))
-        if deleted_element is not None:
-            print("Deleted element:", deleted_element)
-            print("Heap after deletion:")
-            print_array(heap_tree)
-            self.generate()
-        else:
-            print("Element not found in the heap")
+        id,ok = QtWidgets.QInputDialog.getText(self, 'Input Dialog', 'Enter id:')
+        if ok:
+            deleted_element = delete_element_heap(heap_tree,"Id", int(id))
+            if deleted_element is not None:
+                print("Deleted element:", deleted_element)
+                print("Heap after deletion:")
+                print_array(heap_tree)
+                self.generate()
+            else:
+                print("Element not found in the heap")
 
     def get(self):
         id = self.id.text()
@@ -242,44 +274,79 @@ class Ui_MainWindow(QtWidgets.QDialog):
             print("Element not found in the heap")
 
     def update(self):
-        id = self.id.text()
-        name = self.name.text()
-        year = self.year.text()
-        school = self.school.text()
-        success = update_element_heap(heap_tree,"Id",int(id), 1, name)
-        success = update_element_heap(heap_tree,"Id",int(id), 2, int(year))
-        success = update_element_heap(heap_tree,"Id",int(id), 3, school)
-        if success:
-            print("Updated element with new value:", name)
-            print("Heap after update:")
-            print_array(heap_tree)
-            self.generate()
-        else:
-            print("Update failed.")
+        id, ok = QtWidgets.QInputDialog.getText(self, 'Input Dialog', 'Enter id:')
+        if ok:
+            item = get_element_heap(heap_tree,"Id", int(id))
+            if item is None:
+                print("Element not found in the heap")
+                return
+            updateCol, ok = QtWidgets.QInputDialog.getItem(self, 'Input Dialog', 'Select column to update:', ('Year', 'School'), 0, False)
+            if ok and updateCol == 'School':
+                new_value, ok = QtWidgets.QInputDialog.getItem(self, 'Input Dialog', 'Select new school:', ('Engineering', 'Humanities'), 0, False)
+                if ok:
+                    success = update_element_heap(heap_tree,"Id", int(id), 4, new_value)
+                    if success:
+                        print("Updated element with new value:", new_value)
+                        print("Heap after update:")
+                        print_array(heap_tree)
+                        self.generate()
+                    else:
+                        print("Update failed.")
+            elif ok and updateCol == 'Year':
+                new_value, ok = QtWidgets.QInputDialog.getItem(self, 'Input Dialog', 'Select new year:', ('Freshman', 'Sophomore', 'Junior', 'Senior'), 0, False)
+                if ok:
+                    priority = 1
+                    if new_value == 'Freshman':
+                        priority = 1
+                    elif new_value == 'Sophomore':
+                        priority = 2
+                    elif new_value == 'Junior':
+                        priority = 3
+                    elif new_value == 'Senior':
+                        priority = 4
+                    success = update_element_heap(heap_tree,"Id", int(id), 0, priority)
+                    success = update_element_heap(heap_tree,"Id", int(id), 3, new_value)
+                    if success:
+                        print("Updated element with new value:", new_value)
+                        print("Heap after update:")
+                        print_array(heap_tree)
+                        self.generate()
+                    else:
+                        print("Update failed.")
+
+
+    def enroll_helper(self,cap):
+        enrollment_cap = cap
+        enrolled_Ids.clear()
+        self.tableWidget.setRowCount(0)
+        for i in range(cap):
+            self.tableWidget.insertRow(i)
+            enrolled_Ids.append(heap_tree[i][2])
+            for j in range(1,5):
+                self.tableWidget.setItem(i,j-1,QtWidgets.QTableWidgetItem(str(heap_tree[i][j])))
+        self.tableWidget.setHorizontalHeaderLabels([ "Name", "Id", "Year", "School"])
+        self.genBtn.setProperty("text", "Regenerate Table from Database")
+        self.addBtn.setHidden(True)
+        self.edit.setHidden(True)
+        self.deleteBtn.setHidden(True)
+
+        print("Enrolled students:")
+        print(enrolled_Ids)
+        print_array(heap_tree[:cap])
+        print("Enrollment cap:", enrollment_cap)
 
     def enroll(self, cap):
         if cap.text() == "":
             return
         cap = int(cap.text())
         if(cap > len(heap_tree)):
-            print("Not enough students to enroll")
-            return
+            cap = len(heap_tree)
+            self.enroll_helper(cap)
         elif(cap <= 0):
             print("Invalid capacity")
             return
         else:
-            enrollment_cap = cap
-            enrolled_Ids.clear()
-            self.tableWidget.setRowCount(0)
-            for i in range(cap):
-                self.tableWidget.insertRow(i)
-                enrolled_Ids.append(heap_tree[i][2])
-                for j in range(1,5):
-                    self.tableWidget.setItem(i,j-1,QtWidgets.QTableWidgetItem(str(heap_tree[i][j])))
-            self.tableWidget.setHorizontalHeaderLabels([ "Name", "Id", "Year", "School"])
-            print("Enrolled students:")
-            print(enrolled_Ids)
-            print_array(heap_tree[:cap])
+            self.enroll_helper(cap)
 
 
     def generate(self):
@@ -290,8 +357,12 @@ class Ui_MainWindow(QtWidgets.QDialog):
                 self.tableWidget.setItem(i,j-1,QtWidgets.QTableWidgetItem(str(heap_tree[i][j])))
 
         self.tableWidget.setHorizontalHeaderLabels([ "Name", "Id", "Year", "School"])
+        self.genBtn.setProperty("text", "Generate Table from Database")
         self.tableWidget.setHidden(False)
         self.enrollBtn.setProperty("enabled", True)
+        self.deleteBtn.setHidden(False)
+        self.addBtn.setHidden(False)
+        self.edit.setHidden(False)
         
 class Login(QtWidgets.QDialog):
     def __init__(self):
