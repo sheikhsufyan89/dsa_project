@@ -1,3 +1,18 @@
+# -*- coding: utf-8 -*-
+
+# Form implementation generated from reading ui file 'Login.ui'
+#
+# Created by: PyQt5 UI code generator 5.14.2
+#
+# WARNING! All changes made in this file will be lost!
+
+
+from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.uic import loadUi
+import sys
+
+
+
 def insert_heap_tree(hT, val):
     tree_size = len(hT)
     if tree_size == 0:
@@ -183,3 +198,21 @@ def update_element_heap(hT,col,val,update_col, new_value):
 # else:
 #     print("Update failed.")
 
+class Ui_MainWindow(QtWidgets.QDialog):
+    def __init__(self):
+        super(Ui_MainWindow,self).__init__()
+        loadUi("RO.ui",self)
+    
+   
+
+
+
+if __name__ == "__main__":
+    app = QtWidgets.QApplication(sys.argv)
+    widget = QtWidgets.QStackedWidget()
+    ui = Ui_MainWindow()
+    widget.addWidget(ui)
+    widget.setFixedWidth(500)
+    widget.setFixedHeight(700)
+    widget.show()
+    sys.exit(app.exec_())
