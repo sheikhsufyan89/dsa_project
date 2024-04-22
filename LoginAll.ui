@@ -37,7 +37,7 @@ font-size: 14px;</string>
      <number>10</number>
     </property>
     <item>
-     <widget class="QLineEdit" name="lineEdit_2">
+     <widget class="QLineEdit" name="Username">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
         <horstretch>0</horstretch>
@@ -75,7 +75,7 @@ QLineEdit:focus {
      </widget>
     </item>
     <item>
-     <widget class="QLineEdit" name="lineEdit_3">
+     <widget class="QLineEdit" name="Password">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
         <horstretch>0</horstretch>
