@@ -70,6 +70,7 @@ def makeheap():
     
     return heap_tree
 
+permaHeap = makeheap()
 heap_tree = makeheap()
 enrollment_cap = len(heap_tree)
 enrolled_Ids = []
@@ -202,13 +203,25 @@ def update_element_heap(hT,col,val,update_col, new_value):
 # else:
 #     print("Update failed.")
 
+
+
+
+LoginIds = {"John": "101", "Emma": "102", "Michael": "103", "Sarah": "104",
+             "David": "105", "Emily": "106", "Daniel": "107", "Sophia": "108",
+            "James": "109","Olivia": "110", "Admin": "admin", "Teacher": "teacher"}
+
+
+
+
+
+
+
+
+
+
+
 def enroll_stuTea():
-    if 103 in enrolled_Ids:
-        student.statusLbl.setText("Enrolled")
-        student.statusLbl.setStyleSheet("color: green")
-    else:
-        student.statusLbl.setText("Not Enrolled")
-        student.statusLbl.setStyleSheet("color: red")
+   
         
     teacher.tablewidget.setRowCount(0)
     for i in range(len(enrolled_Students)):
@@ -245,6 +258,7 @@ class Ui_MainWindow(QtWidgets.QDialog):
     def __init__(self):
         super(Ui_MainWindow,self).__init__()
         loadUi("RO.ui",self)
+        
         self.genBtn.clicked.connect(self.generate)
         self.tableWidget = self.findChild(QtWidgets.QTableWidget, 'tableWidget')
         self.tableWidget.setHidden(True)
@@ -421,6 +435,7 @@ class Ui_MainWindow(QtWidgets.QDialog):
         
 class Login(QtWidgets.QDialog):
     def __init__(self):
+        
         super(Login,self).__init__()
         loadUi("Login.ui",self)
         self.Student.clicked.connect(self.stu)
@@ -442,6 +457,7 @@ class StudentLogin(QtWidgets.QDialog):
     def __init__(self):
         super(StudentLogin,self).__init__()
         loadUi("LoginAll.ui",self)
+        
         self.Login.clicked.connect(self.login)
         self.Back.clicked.connect(self.back)
 
@@ -449,7 +465,31 @@ class StudentLogin(QtWidgets.QDialog):
         widget.setCurrentIndex(0)
         
     def login(self):
-        widget.setCurrentIndex(5)
+        try :
+            for k,v in LoginIds.items():
+                if k == self.Username.text() and v == self.Password.text():
+                    item = get_element_heap(permaHeap,"Id", int(self.Password.text()))
+                    if item is not None:
+                        student.tableWidget.setRowCount(0)
+                        student.tableWidget.insertRow(0)
+                        for j in range(1,5):
+                            student.tableWidget.setItem(0,j-1,QtWidgets.QTableWidgetItem(str(item[j])))
+                    widget.setCurrentIndex(5)
+                    if enrolled_Ids != []:
+                        if int(self.Password.text()) in enrolled_Ids:
+                            student.statusLbl.setText("Enrolled")
+                            student.statusLbl.setStyleSheet("color: green")
+                        else:
+                            student.statusLbl.setText("Not Enrolled")
+                            student.statusLbl.setStyleSheet("color: red")
+                    return
+                else:
+                    print("Invalid credentials")
+        except:
+            print("Invalid credentials")
+        
+            
+        
         
     pass
 
@@ -457,6 +497,7 @@ class StudentWindow(QtWidgets.QDialog):
     def __init__(self):
         super(StudentWindow,self).__init__()
         loadUi("Student.ui",self)
+        
         if len(enrolled_Ids) > 0 and 103 in enrolled_Ids:
             self.statusLbl = self.findChild(QtWidgets.QLabel, 'statusLbl')
             self.statusLbl.setText("Enrolled")
@@ -481,6 +522,7 @@ class TeacherLogin(QtWidgets.QDialog):
     def __init__(self):
         super(TeacherLogin,self).__init__()
         loadUi("LoginAll.ui",self)
+        
         self.Login.clicked.connect(self.login)
         self.Back.clicked.connect(self.back)
         
@@ -490,7 +532,14 @@ class TeacherLogin(QtWidgets.QDialog):
         
         
     def login(self):
-        widget.setCurrentIndex(6)
+        try :
+            if self.Username.text() == "Admin" and self.Password.text() == "admin":
+                widget.setCurrentIndex(6)
+            else:
+                print("Invalid credentials")
+        except:
+            print("Invalid credentials")
+        
         
     pass
 
@@ -498,6 +547,7 @@ class TeacherWindow(QtWidgets.QDialog):
     def __init__(self):
         super(TeacherWindow,self).__init__()
         loadUi("Teacher.ui",self)
+        
         self.Logout = self.findChild(QtWidgets.QPushButton, 'LogoutBtn')
         self.Logout.clicked.connect(self.logout)
         self.tablewidget = self.findChild(QtWidgets.QTableWidget, 'tableWidget')
@@ -510,26 +560,29 @@ class TeacherWindow(QtWidgets.QDialog):
 
 
     def get(self):
-        print("Get")
-        if enrolled_Students != []:
-            inputDialog = QtWidgets.QInputDialog()
-            id, ok = inputDialog.getText(self, 'Input Dialog', 'Enter id:' )
-            if ok and id != "":
-                item = None
-                for i in range(len(enrolled_Ids)):
-                    if enrolled_Ids[i] == int(id):
-                        item = enrolled_Students[i]
-                if item is not None:
-                    self.IdTxt.setHidden(False)
-                    self.NameTxt.setHidden(False)
-                    self.YearTxt.setHidden(False)
-                    self.SchoolTxt.setHidden(False)
-                    self.IdTxt.setText(str(item[2]))
-                    self.NameTxt.setText(item[1])
-                    self.YearTxt.setText(item[3])
-                    self.SchoolTxt.setText(item[4])
-                else:
-                    print("Element not found in the heap")
+        try :
+            print("Get")
+            if enrolled_Students != []:
+                inputDialog = QtWidgets.QInputDialog()
+                id, ok = inputDialog.getText(self, 'Input Dialog', 'Enter id:' )
+                if ok and id != "":
+                    item = None
+                    for i in range(len(enrolled_Ids)):
+                        if enrolled_Ids[i] == int(id):
+                            item = enrolled_Students[i]
+                    if item is not None:
+                        self.IdTxt.setHidden(False)
+                        self.NameTxt.setHidden(False)
+                        self.YearTxt.setHidden(False)
+                        self.SchoolTxt.setHidden(False)
+                        self.IdTxt.setText(str(item[2]))
+                        self.NameTxt.setText(item[1])
+                        self.YearTxt.setText(item[3])
+                        self.SchoolTxt.setText(item[4])
+                    else:
+                        print("Element not found in the heap")
+        except:
+            print("Failed")
 
 
     
@@ -542,6 +595,7 @@ class AdminLogin(QtWidgets.QDialog):
     def __init__(self):
         super(AdminLogin,self).__init__()
         loadUi("LoginAll.ui",self)
+        
         self.Login.clicked.connect(self.login)
         self.Back.clicked.connect(self.back)
 
@@ -549,14 +603,22 @@ class AdminLogin(QtWidgets.QDialog):
         widget.setCurrentIndex(0)
         
     def login(self):
-        widget.setCurrentIndex(4)
+        try :
+            if self.Username.text() == "Admin" and self.Password.text() == "admin":
+                widget.setCurrentIndex(4)
+            else:
+                print("Invalid credentials")
+        except:
+            print("Invalid credentials")
         
     pass
 
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
+    app.setApplicationDisplayName("Registration Office")
     widget = QtWidgets.QStackedWidget()
+    widget.setWindowIcon(QtGui.QIcon("Logo.png"))
     ui = Ui_MainWindow()
     login = Login()
     studentLogin = StudentLogin()
