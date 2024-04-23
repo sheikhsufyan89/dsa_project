@@ -283,25 +283,28 @@ class Ui_MainWindow(QtWidgets.QDialog):
 
 
     def csvChange(self):
-        inputDialog = QtWidgets.QFileDialog()
-        file = inputDialog.getOpenFileName(self, 'Open file', '.\\', "CSV files (*.csv)")
-        
-        if file != "":
-            fileInput=[]
-            with open (file[0]) as f :
-                lines = f . readlines ()
-                print(lines)
-                print(lines[0])
-                if lines[0] != 'Priority,Name,ID,Year,School\n':
-                    return
-            global heap_tree
-            global permaHeap
-            print("Heap before change: ")
-            print(heap_tree)
-            heap_tree = makeheap(file[0])
-            permaHeap = makeheap(file[0])
-            print("Heap after change:")
-            print(heap_tree)
+        try :
+            inputDialog = QtWidgets.QFileDialog()
+            file = inputDialog.getOpenFileName(self, 'Open file', '.\\', "CSV files (*.csv)")
+            
+            if file != "":
+                fileInput=[]
+                with open (file[0]) as f :
+                    lines = f . readlines ()
+                    print(lines)
+                    print(lines[0])
+                    if lines[0] != 'Priority,Name,ID,Year,School\n':
+                        return
+                global heap_tree
+                global permaHeap
+                print("Heap before change: ")
+                print(heap_tree)
+                heap_tree = makeheap(file[0])
+                permaHeap = makeheap(file[0])
+                print("Heap after change:")
+                print(heap_tree)
+        except:
+            print("Failed")
             
 
     def logout(self):
