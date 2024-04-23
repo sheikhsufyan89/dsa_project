@@ -1,17 +1,21 @@
-# -*- coding: utf-8 -*-
-
-# Form implementation generated from reading ui file 'Login.ui'
-#
-# Created by: PyQt5 UI code generator 5.14.2
-#
-# WARNING! All changes made in this file will be lost!
-
-
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.uic import loadUi
 import sys
 import os
 os.environ['QT_AUTO_SCREEN_SCALE_FACTOR'] = '1'
+
+
+
+
+LoginIds = {"John": "101", "Emma": "102", "Michael": "103", "Sarah": "104",
+             "David": "105", "Emily": "106", "Daniel": "107", "Sophia": "108",
+            "James": "109","Olivia": "110", "Admin": "admin", "Teacher": "teacher"}
+
+FileName = "student_records.csv"
+
+
+
+
 
 
 def insert_heap_tree(hT, val):
@@ -47,12 +51,12 @@ def print_array(hT):
 #     (2, "Olivia Garcia", 110, "Sophomore", "Engineering")
 # ]
 
-def makeheap():
+def makeheap(FileName = "student_records.csv"):
     heap_tree = []
     fileInput = []
     fileData = []
 
-    with open ("student_records.csv") as f :
+    with open (FileName) as f :
         lines = f . readlines ()
         for line in lines :
             line = line . strip () # remove leading and trailing spaces
@@ -60,6 +64,7 @@ def makeheap():
             fileInput . append ( tokens) # add the first token to the
         
     for i in range(1,len(fileInput)):
+        LoginIds[fileInput[i][1]] = fileInput[i][2]
         fileInput[i][0] = int(fileInput[i][0])
         fileInput[i][2] = int(fileInput[i][2])
         fileData.append(tuple(fileInput[i]))
@@ -206,10 +211,6 @@ def update_element_heap(hT,col,val,update_col, new_value):
 
 
 
-LoginIds = {"John": "101", "Emma": "102", "Michael": "103", "Sarah": "104",
-             "David": "105", "Emily": "106", "Daniel": "107", "Sophia": "108",
-            "James": "109","Olivia": "110", "Admin": "admin", "Teacher": "teacher"}
-
 
 
 
@@ -269,6 +270,7 @@ class Ui_MainWindow(QtWidgets.QDialog):
         self.enrollBtn.clicked.connect(lambda: self.enroll(self.cap))
         self.enrollBtn.setProperty("enabled", False)
         self.deleteBtn = self.findChild(QtWidgets.QPushButton, 'deleteBtn')
+        self.csvBtn = self.findChild(QtWidgets.QPushButton, 'csvBtn')
         self.addBtn = self.findChild(QtWidgets.QPushButton, 'addBtn')
         self.edit = self.findChild(QtWidgets.QPushButton, 'editBtn')
         self.deleteBtn.setHidden(True)
@@ -277,6 +279,30 @@ class Ui_MainWindow(QtWidgets.QDialog):
         self.deleteBtn.clicked.connect(self.delete)
         self.addBtn.clicked.connect(self.add)
         self.edit.clicked.connect(self.update)
+        self.csvBtn.clicked.connect(self.csvChange)
+
+
+    def csvChange(self):
+        inputDialog = QtWidgets.QFileDialog()
+        file = inputDialog.getOpenFileName(self, 'Open file', '.\\', "CSV files (*.csv)")
+        
+        if file != "":
+            fileInput=[]
+            with open (file[0]) as f :
+                lines = f . readlines ()
+                print(lines)
+                print(lines[0])
+                if lines[0] != 'Priority,Name,ID,Year,School\n':
+                    return
+            global heap_tree
+            global permaHeap
+            print("Heap before change: ")
+            print(heap_tree)
+            heap_tree = makeheap(file[0])
+            permaHeap = makeheap(file[0])
+            print("Heap after change:")
+            print(heap_tree)
+            
 
     def logout(self):
         widget.setCurrentIndex(0)
@@ -457,9 +483,12 @@ class StudentLogin(QtWidgets.QDialog):
     def __init__(self):
         super(StudentLogin,self).__init__()
         loadUi("LoginAll.ui",self)
-        
+        self.setWindowTitle("Student Login")
         self.Login.clicked.connect(self.login)
         self.Back.clicked.connect(self.back)
+        self.label = self.findChild(QtWidgets.QLabel, 'label')
+        self.label.setText("Student Login")
+
 
     def back(self):
         widget.setCurrentIndex(0)
@@ -497,19 +526,9 @@ class StudentWindow(QtWidgets.QDialog):
     def __init__(self):
         super(StudentWindow,self).__init__()
         loadUi("Student.ui",self)
-        
-        if len(enrolled_Ids) > 0 and 103 in enrolled_Ids:
-            self.statusLbl = self.findChild(QtWidgets.QLabel, 'statusLbl')
-            self.statusLbl.setText("Enrolled")
-            self.statusLbl.setStyleSheet("color: green")
-        elif len(enrolled_Ids) > 0 and 103 not in enrolled_Ids:
-            self.statusLbl = self.findChild(QtWidgets.QLabel, 'statusLbl')
-            self.statusLbl.setText("Not Enrolled")
-            self.statusLbl.setStyleSheet("color: red")
-        else:
-            self.statusLbl = self.findChild(QtWidgets.QLabel, 'statusLbl')
-            self.statusLbl.setText("Pending")
-            self.statusLbl.setStyleSheet("color: yellow") 
+        self.statusLbl = self.findChild(QtWidgets.QLabel, 'statusLbl')
+        self.statusLbl.setText("Pending")
+        self.statusLbl.setStyleSheet("color: yellow") 
 
         self.Logout = self.findChild(QtWidgets.QPushButton, 'LogoutBtn')
         self.Logout.clicked.connect(self.logout)
@@ -522,9 +541,11 @@ class TeacherLogin(QtWidgets.QDialog):
     def __init__(self):
         super(TeacherLogin,self).__init__()
         loadUi("LoginAll.ui",self)
-        
+        self.setWindowTitle("Teacher Login")
         self.Login.clicked.connect(self.login)
         self.Back.clicked.connect(self.back)
+        self.label = self.findChild(QtWidgets.QLabel, 'label')
+        self.label.setText("Teacher Login")
         
 
     def back(self):
@@ -533,7 +554,7 @@ class TeacherLogin(QtWidgets.QDialog):
         
     def login(self):
         try :
-            if self.Username.text() == "Admin" and self.Password.text() == "admin":
+            if self.Username.text() == "Teacher" and self.Password.text() == "teacher":
                 widget.setCurrentIndex(6)
             else:
                 print("Invalid credentials")
@@ -595,9 +616,11 @@ class AdminLogin(QtWidgets.QDialog):
     def __init__(self):
         super(AdminLogin,self).__init__()
         loadUi("LoginAll.ui",self)
-        
+        self.setWindowTitle("Admin Login")
         self.Login.clicked.connect(self.login)
         self.Back.clicked.connect(self.back)
+        self.label = self.findChild(QtWidgets.QLabel, 'label')
+        self.label.setText("Admin Login")
 
     def back(self):
         widget.setCurrentIndex(0)

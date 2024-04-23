@@ -371,6 +371,25 @@ color:white
     <string notr="true">background-color: rgb(50, 50, 50);</string>
    </property>
   </widget>
+  <widget class="QPushButton" name="csvBtn">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>100</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton{background-color: rgb(50,50, 50);color:rgb(255,255,255);border-radius:5;}
+QPushButton:hover{
+ background-color: rgb(60,60,60)
+}</string>
+   </property>
+   <property name="text">
+    <string>Change CSV</string>
+   </property>
+  </widget>
   <zorder>graphicsView</zorder>
   <zorder>verticalLayoutWidget</zorder>
   <zorder>addBtn</zorder>
@@ -379,6 +398,7 @@ color:white
   <zorder>editBtn</zorder>
   <zorder>deleteBtn</zorder>
   <zorder>LogoutBtn</zorder>
+  <zorder>csvBtn</zorder>
  </widget>
  <resources/>
  <connections/>
