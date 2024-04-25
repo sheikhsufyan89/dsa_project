@@ -9,25 +9,25 @@ os.environ['QT_AUTO_SCREEN_SCALE_FACTOR'] = '1'
 
 LoginIds = {"John": "101", "Emma": "102", "Michael": "103", "Sarah": "104",
              "David": "105", "Emily": "106", "Daniel": "107", "Sophia": "108",
-            "James": "109","Olivia": "110", "Admin": "admin", "Teacher": "teacher"}
+            "James": "109","Olivia": "110", "Admin": "admin", "Teacher": "teacher"} # Login Ids for students, admin and teacher
 
-FileName = "student_records.csv"
-
-
+FileName = "student_records.csv" # File name for student records
 
 
 
 
-def insert_heap_tree(hT, val):
+
+
+def insert_heap_tree(hT, val):  # hT is the heap tree, val is the value to be inserted
     tree_size = len(hT)
-    if tree_size == 0:
+    if tree_size == 0: # If the heap tree is empty, insert the value at the root
         hT.append(val)
     else:
         hT.append(val)
         i = tree_size
-        while i != 0 and hT[i][0] > hT[(i - 1) // 2][0]:
-            hT[i], hT[(i - 1) // 2] = hT[(i - 1) // 2], hT[i]  
-            i = (i - 1) // 2
+        while i != 0 and hT[i][0] > hT[(i - 1) // 2][0]: # If the value is greater than its parent, swap the value with its parent
+            hT[i], hT[(i - 1) // 2] = hT[(i - 1) // 2], hT[i]   # Swap the value with its parent
+            i = (i - 1) // 2 # Move to the parent index
 
 def print_array(hT):
     for i in range(len(hT)):
@@ -51,7 +51,7 @@ def print_array(hT):
 #     (2, "Olivia Garcia", 110, "Sophomore", "Engineering")
 # ]
 
-def makeheap(FileName = "student_records.csv"):
+def makeheap(FileName = "student_records.csv"): # Function to create a heap tree from the data
     heap_tree = []
     fileInput = []
     fileData = []
@@ -62,16 +62,16 @@ def makeheap(FileName = "student_records.csv"):
             line = line . strip () # remove leading and trailing spaces
             tokens = line . split (",") # split the line into tokens
             fileInput . append ( tokens) # add the first token to the
-        
-    for i in range(1,len(fileInput)):
-        LoginIds[fileInput[i][1]] = fileInput[i][2]
-        fileInput[i][0] = int(fileInput[i][0])
-        fileInput[i][2] = int(fileInput[i][2])
-        fileData.append(tuple(fileInput[i]))
+         
+    for i in range(1,len(fileInput)): # Skip the first line as it contains the column names
+        LoginIds[fileInput[i][1]] = fileInput[i][2] # Add the student name and id to the LoginIds dictionary
+        fileInput[i][0] = int(fileInput[i][0]) # Convert the priority to an integer
+        fileInput[i][2] = int(fileInput[i][2]) # Convert the id to an integer
+        fileData.append(tuple(fileInput[i])) # Append the tuple to the fileData list
 
 
     for item in fileData:
-        insert_heap_tree(heap_tree, item)
+        insert_heap_tree(heap_tree, item) # Insert the item into the heap tree
     
     return heap_tree
 
@@ -88,49 +88,49 @@ print(heap_tree)
 
 
 #delete
-def delete_element_heap(hT,col, val):
+def delete_element_heap(hT,col, val): # hT is the heap tree, col is the column to be based on, val is the value to be deleted
     basedOn = 1
-    if col == "Id":
+    if col == "Id": # If the column is Id, set basedOn to 2
         basedOn = 2
-    index = None
-    for i in range(len(hT)):
-        if hT[i][basedOn] == val:
+    index = None # Initialize index to None
+    for i in range(len(hT)): # Iterate through the heap tree
+        if hT[i][basedOn] == val: # If the value is found
             index = i
             break
     
-    if index is None:
+    if index is None: # If the value is not found
         print("Element not found in the heap")
         return None
     
-    hT[index] = hT[-1]
-    hT.pop()
+    hT[index] = hT[-1] # Replace the value to be deleted with the last value in the heap tree
+    hT.pop() # Remove the last value from the heap tree
     
-    if index < len(hT):
-        heapify_down(hT, index)
-        heapify_up(hT, index)
+    if index < len(hT): # If the index is less than the length of the heap tree
+        heapify_down(hT, index) # Perform heapify down
+        heapify_up(hT, index) # Perform heapify up
     
     return val
 
-def heapify_up(hT, i):
-    parent = (i - 1) // 2
-    if parent >= 0 and hT[i][0] > hT[parent][0]:
-        hT[i], hT[parent] = hT[parent], hT[i]
-        heapify_up(hT, parent)
+def heapify_up(hT, i): # Function to heapify up
+    parent = (i - 1) // 2 # Calculate the parent index
+    if parent >= 0 and hT[i][0] > hT[parent][0]: # If the value is greater than its parent
+        hT[i], hT[parent] = hT[parent], hT[i] # Swap the value with its parent
+        heapify_up(hT, parent) # Recursively call heapify up
 
-def heapify_down(hT, i):
-    left_child = 2 * i + 1
-    right_child = 2 * i + 2
-    largest = i
+def heapify_down(hT, i): # Function to heapify down
+    left_child = 2 * i + 1 # Calculate the left child index
+    right_child = 2 * i + 2 # Calculate the right child index
+    largest = i # Initialize largest to i
 
-    if left_child < len(hT) and hT[left_child][0] > hT[largest][0]:
-        largest = left_child
+    if left_child < len(hT) and hT[left_child][0] > hT[largest][0]: # If the left child is greater than the largest
+        largest = left_child # Set largest to left child
 
-    if right_child < len(hT) and hT[right_child][0] > hT[largest][0]:
-        largest = right_child
+    if right_child < len(hT) and hT[right_child][0] > hT[largest][0]: # If the right child is greater than the largest
+        largest = right_child # Set largest to right child
 
-    if largest != i:
-        hT[i], hT[largest] = hT[largest], hT[i]
-        heapify_down(hT, largest)
+    if largest != i: # If largest is not i
+        hT[i], hT[largest] = hT[largest], hT[i] # Swap the value with the largest
+        heapify_down(hT, largest) # Recursively call heapify down
 
 # # Example usage:
 # # Assuming heap_tree is already populated
@@ -144,13 +144,13 @@ def heapify_down(hT, i):
 
 
 #get
-def get_element_heap(hT,col,val):
+def get_element_heap(hT,col,val): # hT is the heap tree, col is the column to be based on, val is the value to be retrieved
     basedOn = 1
-    if col == "Id":
+    if col == "Id": # If the column is Id, set basedOn to 2
         basedOn = 2
     index = None
-    for i in range(len(hT)):
-        if hT[i][basedOn] == val:
+    for i in range(len(hT)): # Iterate through the heap tree
+        if hT[i][basedOn] == val: # If the value is found
             index = i
             break
     
@@ -170,26 +170,26 @@ def get_element_heap(hT,col,val):
 
 
 #update
-def update_element_heap(hT,col,val,update_col, new_value):
+def update_element_heap(hT,col,val,update_col, new_value): # hT is the heap tree, col is the column to be based on, val is the value to be updated, update_col is the column to be updated, new_value is the new value
     basedOn = 1
-    if col == "Id":
+    if col == "Id": # If the column is Id, set basedOn to 2
         basedOn = 2
     index = None
-    for i in range(len(hT)):
-        if hT[i][basedOn] == val:
+    for i in range(len(hT)): # Iterate through the heap tree
+        if hT[i][basedOn] == val: # If the value is found
             index = i
             break
     if index is None:
         print("Element not found in the heap")
         return None
     
-    old_value = hT[index]
-    updated_element = list(old_value)
-    updated_element[update_col] = new_value
-    hT[index] = tuple(updated_element)
+    old_value = hT[index] # Get the old value
+    updated_element = list(old_value) # Convert the old value to a list
+    updated_element[update_col] = new_value # Update the value
+    hT[index] = tuple(updated_element) # Convert the updated value back to a tuple and update the heap tree
 
     # If the new value is greater, perform heapify up, otherwise heapify down
-    if hT[index][0] > old_value[0]:
+    if hT[index][0] > old_value[0]: 
         heapify_up(hT, index)
     else:
         heapify_down(hT, index)
@@ -221,46 +221,46 @@ def update_element_heap(hT,col,val,update_col, new_value):
 
 
 
-def enroll_stuTea():
+def enroll_stuTea():  # Enroll students helper
    
         
-    teacher.tablewidget.setRowCount(0)
-    for i in range(len(enrolled_Students)):
-        teacher.tablewidget.insertRow(i)
-        for j in range(1,5):
-            teacher.tablewidget.setItem(i,j-1,QtWidgets.QTableWidgetItem(str(enrolled_Students[i][j])))
+    teacher.tablewidget.setRowCount(0) # Clear the table widget
+    for i in range(len(enrolled_Students)): # Iterate through the enrolled students
+        teacher.tablewidget.insertRow(i) # Insert a row in the table widget
+        for j in range(1,5): # Iterate through the columns
+            teacher.tablewidget.setItem(i,j-1,QtWidgets.QTableWidgetItem(str(enrolled_Students[i][j]))) # Set the item in the table widget
 
-    teacher.IdTxt.setHidden(False)
-    teacher.NameTxt.setHidden(False)
-    teacher.YearTxt.setHidden(False)
-    teacher.SchoolTxt.setHidden(False)
+    teacher.IdTxt.setHidden(False) # Set the Id text box to visible
+    teacher.NameTxt.setHidden(False)  # Set the Name text box to visible
+    teacher.YearTxt.setHidden(False) # Set the Year text box to visible
+    teacher.SchoolTxt.setHidden(False) # Set the School text box to visible
 
-    teacher.label_3.setHidden(True)
-    teacher.statusLbl.setHidden(True)
-
-    pass
-
-def gen_stuTea():
-    student.statusLbl.setText("Pending")
-    student.statusLbl.setStyleSheet("color: yellow")
-    teacher.tablewidget.setRowCount(0)
-    teacher.IdTxt.setHidden(True)
-    teacher.NameTxt.setHidden(True)
-    teacher.YearTxt.setHidden(True)
-    teacher.SchoolTxt.setHidden(True)
-    teacher.label_3.setHidden(False)
-    teacher.statusLbl.setHidden(False)
+    teacher.label_3.setHidden(True) # Set the label to hidden
+    teacher.statusLbl.setHidden(True) # Set the status label to hidden
 
     pass
 
-class Ui_MainWindow(QtWidgets.QDialog):
+def gen_stuTea(): # Generate students helper
+    student.statusLbl.setText("Pending") # Set the status label to pending
+    student.statusLbl.setStyleSheet("color: yellow") # Set the status label color to yellow
+    teacher.tablewidget.setRowCount(0) # Clear the table widget
+    teacher.IdTxt.setHidden(True) # Set the Id text box to hidden
+    teacher.NameTxt.setHidden(True) # Set the Name text box to hidden
+    teacher.YearTxt.setHidden(True) # Set the Year text box to hidden
+    teacher.SchoolTxt.setHidden(True) # Set the School text box to hidden
+    teacher.label_3.setHidden(False) # Set the label to visible
+    teacher.statusLbl.setHidden(False) # Set the status label to visible
+
+    pass
+
+class Ui_MainWindow(QtWidgets.QDialog): # RO window class
 
 
-    def __init__(self):
+    def __init__(self): 
         super(Ui_MainWindow,self).__init__()
-        loadUi("RO.ui",self)
+        loadUi("RO.ui",self) # Load the RO.ui file
         
-        self.genBtn.clicked.connect(self.generate)
+        self.genBtn.clicked.connect(self.generate) 
         self.tableWidget = self.findChild(QtWidgets.QTableWidget, 'tableWidget')
         self.tableWidget.setHidden(True)
         self.genBTn = self.findChild(QtWidgets.QPushButton, 'genBtn')
@@ -280,98 +280,104 @@ class Ui_MainWindow(QtWidgets.QDialog):
         self.addBtn.clicked.connect(self.add)
         self.edit.clicked.connect(self.update)
         self.csvBtn.clicked.connect(self.csvChange)
+        global heap_tree
+        global permaHeap
 
-
-    def csvChange(self):
+    def csvChange(self): # Function to change the CSV file
         try :
-            inputDialog = QtWidgets.QFileDialog()
-            file = inputDialog.getOpenFileName(self, 'Open file', '.\\', "CSV files (*.csv)")
+            inputDialog = QtWidgets.QFileDialog() # Open a file dialog
+            file = inputDialog.getOpenFileName(self, 'Open file', '.\\', "CSV files (*.csv)") # Get the file name
             
-            if file != "":
+            if file != "": # If the file is not empty
                 fileInput=[]
                 with open (file[0]) as f :
                     lines = f . readlines ()
                     print(lines)
                     print(lines[0])
-                    if lines[0] != 'Priority,Name,ID,Year,School\n':
+                    if lines[0] != 'Priority,Name,ID,Year,School\n': # If the first line is not the column names 
                         return
                 global heap_tree
                 global permaHeap
                 print("Heap before change: ")
                 print(heap_tree)
-                heap_tree = makeheap(file[0])
-                permaHeap = makeheap(file[0])
+                heap_tree = makeheap(file[0]) # Create a new heap tree from the file
+                permaHeap = makeheap(file[0]) # Create a new heap tree from the file
                 print("Heap after change:")
                 print(heap_tree)
-        except:
-            print("Failed")
+        except( Exception):
+            print(Exception)
             
 
     def logout(self):
-        widget.setCurrentIndex(0)
+        widget.setCurrentIndex(0) # Go to the login page
 
-    def add(self):
-        inputDialog = QtWidgets.QInputDialog()
-        name, ok = inputDialog.getText(self, 'Input Dialog', 'Enter name:' )
-        if ok and name != "":
-            id, ok = inputDialog.getText(self, 'Input Dialog', 'Enter id:')
-            if id != "" and ok:
-                item = get_element_heap(heap_tree,"Id", int(id))
-            if ok and item is None:
-                year, ok = inputDialog.getItem(self, 'Input Dialog', 'Select year:', ('Freshman', 'Sophomore', 'Junior', 'Senior'), 0, False)
-                if ok and year is not None:
-                    school, ok = inputDialog.getItem(self, 'Input Dialog', 'Select school:', ('Engineering', 'Humanities'), 0, False)
-                    if ok and school is not None:
-                        priority = 1
-                        id = int(id)
-                        if year == 'Freshman':
+    def add(self): # Function to add an element
+        inputDialog = QtWidgets.QInputDialog() # Open an input dialog
+        name, ok = inputDialog.getText(self, 'Input Dialog', 'Enter name:' ) # Get the name
+        if ok: # If Success
+            if name == "" or name in LoginIds: # If the name is empty or already exists
+                print("Invalid name")
+                return
+            id, ok = inputDialog.getText(self, 'Input Dialog', 'Enter id:') # Get the id
+            if id != "" and ok: # If the id is not empty
+                item = get_element_heap(heap_tree,"Id", int(id)) # Get the item with the id
+                if ok and item is None: # If the item is not found
+                    year, ok = inputDialog.getItem(self, 'Input Dialog', 'Select year:', ('Freshman', 'Sophomore', 'Junior', 'Senior'), 0, False) # Get the year
+                    if ok and year is not None: # If the year is not empty
+                        school, ok = inputDialog.getItem(self, 'Input Dialog', 'Select school:', ('Engineering', 'Humanities'), 0, False) # Get the school
+                        if ok and school is not None: # If the school is not empty
                             priority = 1
-                        elif year == 'Sophomore':
-                            priority = 2
-                        elif year == 'Junior':
-                            priority = 3
-                        elif year == 'Senior':
-                            priority = 4
-                        insert_heap_tree(heap_tree, (priority, name, id, year, school))
-                        print("Heap after insertion:")
-                        print_array(heap_tree)
-                        self.generate()
+                            id = int(id)
+                            if year == 'Freshman': # Set the priority based on the year
+                                priority = 1
+                            elif year == 'Sophomore': 
+                                priority = 2
+                            elif year == 'Junior':
+                                priority = 3
+                            elif year == 'Senior':
+                                priority = 4
+                            insert_heap_tree(heap_tree, (priority, name, id, year, school)) # Insert the item into the heap tree
+                            insert_heap_tree(permaHeap, (priority, name, id, year, school)) # Insert the item into the heap tree
+                            LoginIds[name] = str(id) # Add the name and id to the LoginIds dictionary
+                            print("Heap after insertion:")
+                            print_array(heap_tree)
+                            self.generate() # Generate the table
 
 
-    def delete(self):
-        id,ok = QtWidgets.QInputDialog.getText(self, 'Input Dialog', 'Enter id:')
-        if ok and id != "":
-            deleted_element = delete_element_heap(heap_tree,"Id", int(id))
-            if deleted_element is not None:
+    def delete(self): # Function to delete an element
+        id,ok = QtWidgets.QInputDialog.getText(self, 'Input Dialog', 'Enter id:') # Get the id
+        if ok and id != "": # If the id is not empty
+            deleted_element = delete_element_heap(heap_tree,"Id", int(id)) # Delete the element with the id
+            if deleted_element is not None: # If the element is found
                 print("Deleted element:", deleted_element)
                 print("Heap after deletion:")
                 print_array(heap_tree)
-                self.generate()
-            else:
+                self.generate() # Generate the table
+            else: # If the element is not found
                 print("Element not found in the heap")
 
 
-    def update(self):
-        id, ok = QtWidgets.QInputDialog.getText(self, 'Input Dialog', 'Enter id:')
+    def update(self): # Function to update an element
+        id, ok = QtWidgets.QInputDialog.getText(self, 'Input Dialog', 'Enter id:') 
         if ok and id != "":
-            item = get_element_heap(heap_tree,"Id", int(id))
+            item = get_element_heap(heap_tree,"Id", int(id)) # Get the item with the id
             if item is None:
                 print("Element not found in the heap")
                 return
-            updateCol, ok = QtWidgets.QInputDialog.getItem(self, 'Input Dialog', 'Select column to update:', ('Year', 'School'), 0, False)
-            if ok and updateCol == 'School':
-                new_value, ok = QtWidgets.QInputDialog.getItem(self, 'Input Dialog', 'Select new school:', ('Engineering', 'Humanities'), 0, False)
+            updateCol, ok = QtWidgets.QInputDialog.getItem(self, 'Input Dialog', 'Select column to update:', ('Year', 'School'), 0, False) # Get the column to update
+            if ok and updateCol == 'School': # If the column to update is School
+                new_value, ok = QtWidgets.QInputDialog.getItem(self, 'Input Dialog', 'Select new school:', ('Engineering', 'Humanities'), 0, False) # Get the new value
                 if ok:
-                    success = update_element_heap(heap_tree,"Id", int(id), 4, new_value)
-                    if success:
+                    success = update_element_heap(heap_tree,"Id", int(id), 4, new_value) # Update the element
+                    if success: # If the update is successful
                         print("Updated element with new value:", new_value)
                         print("Heap after update:")
                         print_array(heap_tree)
-                        self.generate()
+                        self.generate() # Generate the table
                     else:
                         print("Update failed.")
-            elif ok and updateCol == 'Year':
-                new_value, ok = QtWidgets.QInputDialog.getItem(self, 'Input Dialog', 'Select new year:', ('Freshman', 'Sophomore', 'Junior', 'Senior'), 0, False)
+            elif ok and updateCol == 'Year': # If the column to update is Year
+                new_value, ok = QtWidgets.QInputDialog.getItem(self, 'Input Dialog', 'Select new year:', ('Freshman', 'Sophomore', 'Junior', 'Senior'), 0, False) # Get the new value
                 if ok:
                     priority = 1
                     if new_value == 'Freshman':
@@ -394,73 +400,76 @@ class Ui_MainWindow(QtWidgets.QDialog):
 
 
     def enroll_helper(self,cap):
-        enrollment_cap = cap
-        enrolled_Ids.clear()
-        enrolled_Students.clear()
-        self.tableWidget.setRowCount(0)
-        for i in range(cap):
-            max_element = heap_tree[0]
-            self.tableWidget.insertRow(i)
-            for j in range(1,5):
-                self.tableWidget.setItem(i,j-1,QtWidgets.QTableWidgetItem(str(max_element[j])))
-            enrolled_Ids.append(max_element[2])
-            enrolled_Students.append(max_element)
+        enrollment_cap = cap # Set the enrollment cap
+        enrolled_Ids.clear() # Clear the enrolled ids
+        enrolled_Students.clear() # Clear the enrolled students
+        self.tableWidget.setRowCount(0) # Clear the table widget
+        for i in range(cap): # Iterate through the enrollment cap
+            max_element = heap_tree[0] # Get the max element
+            self.tableWidget.insertRow(i) # Insert a row in the table widget
+            for j in range(1,5): # Iterate through the columns
+                self.tableWidget.setItem(i,j-1,QtWidgets.QTableWidgetItem(str(max_element[j]))) # Set the item in the table widget
+            enrolled_Ids.append(max_element[2]) # Append the id to the enrolled ids
+            enrolled_Students.append(max_element) # Append the student to the enrolled students
             print("Max element:", max_element)
             # Remove the max element from the heap
-            delete_element_heap(heap_tree, "Id", max_element[2])
-        self.tableWidget.setHorizontalHeaderLabels([ "Name", "Id", "Year", "School"])
-        self.genBtn.setProperty("text", "Regenerate Table from Database")
-        self.addBtn.setHidden(True)
-        self.edit.setHidden(True)
-        self.deleteBtn.setHidden(True)
+            delete_element_heap(heap_tree, "Id", max_element[2]) # Delete the element from the heap tree
+        self.tableWidget.setHorizontalHeaderLabels([ "Name", "Id", "Year", "School"]) # Set the horizontal header labels
+        self.genBtn.setProperty("text", "Regenerate Table from Database") # Set the text of the generate button
+        self.addBtn.setHidden(True) # Set the add button to hidden
+        self.edit.setHidden(True) # Set the edit button to hidden
+        self.deleteBtn.setHidden(True) # Set the delete button to hidden
 
         print("Enrolled students:")
         print(enrolled_Ids)
         print_array(enrolled_Students)
         print("Enrollment cap:", enrollment_cap)
 
-        enroll_stuTea()
+        enroll_stuTea() # Enroll the students
 
        
-    def enroll(self, cap):
+    def enroll(self, cap): # Function to enroll the students
         print(heap_tree)
-        if cap.text() == "":
+        if cap.text() == "": # If the capacity is empty
             return
-        cap = int(cap.text())
-        if(cap > len(heap_tree)):
-            cap = len(heap_tree)
-            self.cap.setText(str(cap))
-            self.enroll_helper(cap)
-            self.enrollBtn.setProperty("enabled", False)
+        cap = int(cap.text()) # Convert the capacity to an integer
+        if(cap > len(heap_tree)): # If the capacity is greater than the heap tree length
+            cap = len(heap_tree) # Set the capacity to the heap tree length
+            self.cap.setText(str(cap)) # Set the capacity text
+            self.enroll_helper(cap) # Enroll the students
+            self.enrollBtn.setProperty("enabled", False) # Set the enroll button to disabled
         elif(cap <= 0):
             print("Invalid capacity")
             return
         else:
-            self.enroll_helper(cap)
-            self.enrollBtn.setProperty("enabled", False)
+            self.enroll_helper(cap) # Enroll the students
+            self.enrollBtn.setProperty("enabled", False) # Set the enroll button to disabled
 
 
-    def generate(self):
-        if self.genBtn.text() == "Regenerate Table from Database":
+    def generate(self): # Function to generate the table
+        if self.genBtn.text() == "Regenerate Table from Database": 
             for i in range(len(enrolled_Students)):
-                insert_heap_tree(heap_tree, enrolled_Students[i])
-        enrolled_Students.clear()
-        enrolled_Ids.clear()
-        gen_stuTea()
+                item = get_element_heap(permaHeap,"Id", enrolled_Students[i][2])
+                print("Item:", item)
+                if item is None:
+                    insert_heap_tree(heap_tree, enrolled_Students[i]) # Insert the enrolled students back into the heap tree
+        enrolled_Students.clear() # Clear the enrolled students
+        enrolled_Ids.clear() # Clear the enrolled ids
+        gen_stuTea() # Generate students helper
 
-        self.tableWidget.setRowCount(0)
+        self.tableWidget.setRowCount(0) # Clear the table widget
         for i in range(len(heap_tree)):
-            self.tableWidget.insertRow(i)
+            self.tableWidget.insertRow(i) # Insert a row in the table widget
             for j in range(1,5):
-                self.tableWidget.setItem(i,j-1,QtWidgets.QTableWidgetItem(str(heap_tree[i][j])))
+                self.tableWidget.setItem(i,j-1,QtWidgets.QTableWidgetItem(str(heap_tree[i][j]))) # Set the item in the table widget
 
-        self.tableWidget.setHorizontalHeaderLabels([ "Name", "Id", "Year", "School"])
-        self.genBtn.setProperty("text", "Generate Table from Database")
-        self.tableWidget.setHidden(False)
-        self.enrollBtn.setProperty("enabled", True)
-        self.deleteBtn.setHidden(False)
-        self.addBtn.setHidden(False)
-        self.edit.setHidden(False)
+        self.tableWidget.setHorizontalHeaderLabels([ "Name", "Id", "Year", "School"]) # Set the horizontal header labels
+        self.genBtn.setProperty("text", "Generate Table from Database") # Set the text of the generate button
+        self.tableWidget.setHidden(False) # Set the table widget to visible
+        self.enrollBtn.setProperty("enabled", True) # Set the enroll button to enabled
+        self.deleteBtn.setHidden(False) # Set the delete button to visible
+        self.addBtn.setHidden(False) # Set the add button to visible
+        self.edit.setHidden(False) # Set the edit button to visible
         
 class Login(QtWidgets.QDialog):
     def __init__(self):
@@ -491,30 +500,35 @@ class StudentLogin(QtWidgets.QDialog):
         self.Back.clicked.connect(self.back)
         self.label = self.findChild(QtWidgets.QLabel, 'label')
         self.label.setText("Student Login")
+        
 
 
     def back(self):
         widget.setCurrentIndex(0)
         
     def login(self):
+        print(self.Username.text(), self.Password.text())
         try :
             for k,v in LoginIds.items():
                 if k == self.Username.text() and v == self.Password.text():
-                    item = get_element_heap(permaHeap,"Id", int(self.Password.text()))
+                    item = get_element_heap(heap_tree,"Id", int(self.Password.text()))
+                    print(item)
                     if item is not None:
                         student.tableWidget.setRowCount(0)
                         student.tableWidget.insertRow(0)
                         for j in range(1,5):
                             student.tableWidget.setItem(0,j-1,QtWidgets.QTableWidgetItem(str(item[j])))
-                    widget.setCurrentIndex(5)
-                    if enrolled_Ids != []:
-                        if int(self.Password.text()) in enrolled_Ids:
-                            student.statusLbl.setText("Enrolled")
-                            student.statusLbl.setStyleSheet("color: green")
-                        else:
-                            student.statusLbl.setText("Not Enrolled")
-                            student.statusLbl.setStyleSheet("color: red")
-                    return
+                        widget.setCurrentIndex(5)
+                        if enrolled_Ids != []:
+                            if int(self.Password.text()) in enrolled_Ids:
+                                student.statusLbl.setText("Enrolled")
+                                student.statusLbl.setStyleSheet("color: green")
+                            else:
+                                student.statusLbl.setText("Not Enrolled")
+                                student.statusLbl.setStyleSheet("color: red")
+                        return
+                    else:
+                        print("Invalid credentials")
                 else:
                     print("Invalid credentials")
         except:
