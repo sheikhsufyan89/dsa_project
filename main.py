@@ -492,7 +492,7 @@ class Ui_MainWindow(QtWidgets.QDialog): # RO window class
     def generate(self): # Function to generate the table
         if self.genBtn.text() == "Regenerate Table from Database": 
             for i in range(len(enrolled_Students)):
-                item = get_element_heap(permaHeap,"Id", enrolled_Students[i][2])
+                item = get_element_heap(heap_tree,"Id", enrolled_Students[i][2])
                 print("Item:", item)
                 if item is None:
                     insert_heap_tree(heap_tree, enrolled_Students[i]) # Insert the enrolled students back into the heap tree
