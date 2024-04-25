@@ -7,9 +7,7 @@ os.environ['QT_AUTO_SCREEN_SCALE_FACTOR'] = '1'
 
 
 
-LoginIds = {"John": "101", "Emma": "102", "Michael": "103", "Sarah": "104",
-             "David": "105", "Emily": "106", "Daniel": "107", "Sophia": "108",
-            "James": "109","Olivia": "110", "Admin": "admin", "Teacher": "teacher"} # Login Ids for students, admin and teacher
+LoginIds = {"Admin": "admin", "Teacher": "teacher"} # Login Ids for students, admin and teacher
 
 FileName = "student_records.csv" # File name for student records
 
@@ -52,7 +50,7 @@ def print_array(hT):
 # ]
 
 def makeheap(FileName = "student_records.csv"): # Function to create a heap tree from the data
-    heap_tree = []
+    heapTree = []
     fileInput = []
     fileData = []
 
@@ -71,9 +69,9 @@ def makeheap(FileName = "student_records.csv"): # Function to create a heap tree
 
 
     for item in fileData:
-        insert_heap_tree(heap_tree, item) # Insert the item into the heap tree
+        insert_heap_tree(heapTree, item) # Insert the item into the heap tree
     
-    return heap_tree
+    return heapTree
 
 permaHeap = makeheap()
 heap_tree = makeheap()
@@ -102,6 +100,8 @@ def delete_element_heap(hT,col, val): # hT is the heap tree, col is the column t
         print("Element not found in the heap")
         return None
     
+    delItem = hT[index] # Get the value to be deleted
+
     hT[index] = hT[-1] # Replace the value to be deleted with the last value in the heap tree
     hT.pop() # Remove the last value from the heap tree
     
@@ -109,7 +109,7 @@ def delete_element_heap(hT,col, val): # hT is the heap tree, col is the column t
         heapify_down(hT, index) # Perform heapify down
         heapify_up(hT, index) # Perform heapify up
     
-    return val
+    return delItem
 
 def heapify_up(hT, i): # Function to heapify up
     parent = (i - 1) // 2 # Calculate the parent index
@@ -366,11 +366,17 @@ class Ui_MainWindow(QtWidgets.QDialog): # RO window class
         id,ok = QtWidgets.QInputDialog.getText(self, 'Input Dialog', 'Enter id:') # Get the id
         if ok and id != "": # If the id is not empty
             deleted_element = delete_element_heap(heap_tree,"Id", int(id)) # Delete the element with the id
+
             if deleted_element is not None: # If the element is found
                 print("Deleted element:", deleted_element)
                 print("Heap after deletion:")
                 print_array(heap_tree)
                 self.generate() # Generate the table
+                print("LoginIds before deletion:")
+                print(LoginIds)
+                del LoginIds[deleted_element[1]] # Delete the name from the LoginIds dictionary
+                print("LoginIds after deletion:")
+                print(LoginIds)
             else: # If the element is not found
                 msg = QtWidgets.QMessageBox()
                 msg.setIcon(QtWidgets.QMessageBox.Warning)
@@ -552,6 +558,8 @@ class StudentLogin(QtWidgets.QDialog):
     def login(self): # for student login 
         username = self.Username.text()
         password = self.Password.text()
+        print(username, password)
+        print(LoginIds)
         try:
             # Iterate over the LoginIds dictionary to check if the entered credentials are valid
             for k, v in LoginIds.items():
