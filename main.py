@@ -316,12 +316,30 @@ class Ui_MainWindow(QtWidgets.QDialog): # RO window class
         name, ok = inputDialog.getText(self, 'Input Dialog', 'Enter name:' ) # Get the name
         if ok: # If Success
             if name == "" or name in LoginIds: # If the name is empty or already exists
-                print("Invalid name")
+                msg = QtWidgets.QMessageBox()
+                msg.setIcon(QtWidgets.QMessageBox.Warning)
+                msg.setText("Invalid name")
+                msg.setWindowTitle("Credentials error")
+                msg.exec_()
                 return
             id, ok = inputDialog.getText(self, 'Input Dialog', 'Enter id:') # Get the id
-            if id != "" and ok: # If the id is not empty
+            if id == "" and ok:
+                msg = QtWidgets.QMessageBox()
+                msg.setIcon(QtWidgets.QMessageBox.Warning)
+                msg.setText("Enter ID to continue")
+                msg.setWindowTitle("Credentials error")
+                msg.exec_()
+            elif id != "" and ok: # If the id is not empty
                 item = get_element_heap(heap_tree,"Id", int(id)) # Get the item with the id
-                if ok and item is None: # If the item is not found
+                if item is not None: # If the item is found
+                # Show error message
+                    msg = QtWidgets.QMessageBox()
+                    msg.setIcon(QtWidgets.QMessageBox.Warning)
+                    msg.setText("ID already exists")
+                    msg.setWindowTitle("Error")
+                    msg.exec_()
+                    return
+                elif ok and item is None: # If the item is not found
                     year, ok = inputDialog.getItem(self, 'Input Dialog', 'Select year:', ('Freshman', 'Sophomore', 'Junior', 'Senior'), 0, False) # Get the year
                     if ok and year is not None: # If the year is not empty
                         school, ok = inputDialog.getItem(self, 'Input Dialog', 'Select school:', ('Engineering', 'Humanities'), 0, False) # Get the school
@@ -354,7 +372,11 @@ class Ui_MainWindow(QtWidgets.QDialog): # RO window class
                 print_array(heap_tree)
                 self.generate() # Generate the table
             else: # If the element is not found
-                print("Element not found in the heap")
+                msg = QtWidgets.QMessageBox()
+                msg.setIcon(QtWidgets.QMessageBox.Warning)
+                msg.setText("Student not found")
+                msg.setWindowTitle("Element not found")
+                msg.exec_()
 
 
     def update(self): # Function to update an element
@@ -362,7 +384,11 @@ class Ui_MainWindow(QtWidgets.QDialog): # RO window class
         if ok and id != "":
             item = get_element_heap(heap_tree,"Id", int(id)) # Get the item with the id
             if item is None:
-                print("Element not found in the heap")
+                msg = QtWidgets.QMessageBox()
+                msg.setIcon(QtWidgets.QMessageBox.Warning)
+                msg.setText("Student not found")
+                msg.setWindowTitle("Element not found")
+                msg.exec_()
                 return
             updateCol, ok = QtWidgets.QInputDialog.getItem(self, 'Input Dialog', 'Select column to update:', ('Year', 'School'), 0, False) # Get the column to update
             if ok and updateCol == 'School': # If the column to update is School
@@ -375,7 +401,11 @@ class Ui_MainWindow(QtWidgets.QDialog): # RO window class
                         print_array(heap_tree)
                         self.generate() # Generate the table
                     else:
-                        print("Update failed.")
+                        msg = QtWidgets.QMessageBox() # for generating error if update fails.
+                        msg.setIcon(QtWidgets.QMessageBox.Warning)
+                        msg.setText("Update failed")
+                        msg.setWindowTitle("Failure")
+                        msg.exec_()
             elif ok and updateCol == 'Year': # If the column to update is Year
                 new_value, ok = QtWidgets.QInputDialog.getItem(self, 'Input Dialog', 'Select new year:', ('Freshman', 'Sophomore', 'Junior', 'Senior'), 0, False) # Get the new value
                 if ok:
@@ -396,7 +426,11 @@ class Ui_MainWindow(QtWidgets.QDialog): # RO window class
                         print_array(heap_tree)
                         self.generate()
                     else:
-                        print("Update failed.")
+                        msg = QtWidgets.QMessageBox() # for generating error if update fails.
+                        msg.setIcon(QtWidgets.QMessageBox.Warning)
+                        msg.setText("Update failed")
+                        msg.setWindowTitle("Failure")
+                        msg.exec_()
 
 
     def enroll_helper(self,cap):
@@ -431,6 +465,11 @@ class Ui_MainWindow(QtWidgets.QDialog): # RO window class
     def enroll(self, cap): # Function to enroll the students
         print(heap_tree)
         if cap.text() == "": # If the capacity is empty
+            msg = QtWidgets.QMessageBox()
+            msg.setIcon(QtWidgets.QMessageBox.Warning)
+            msg.setText("Enrollment capacity cannot be empty")
+            msg.setWindowTitle("Enrollment Error")
+            msg.exec_()
             return
         cap = int(cap.text()) # Convert the capacity to an integer
         if(cap > len(heap_tree)): # If the capacity is greater than the heap tree length
@@ -439,7 +478,11 @@ class Ui_MainWindow(QtWidgets.QDialog): # RO window class
             self.enroll_helper(cap) # Enroll the students
             self.enrollBtn.setProperty("enabled", False) # Set the enroll button to disabled
         elif(cap <= 0):
-            print("Invalid capacity")
+            msg = QtWidgets.QMessageBox()
+            msg.setIcon(QtWidgets.QMessageBox.Warning)
+            msg.setText("Invalid capacity")
+            msg.setWindowTitle("Enrollment Error")
+            msg.exec_()
             return
         else:
             self.enroll_helper(cap) # Enroll the students
@@ -475,18 +518,18 @@ class Login(QtWidgets.QDialog):
     def __init__(self):
         
         super(Login,self).__init__()
-        loadUi("Login.ui",self)
+        loadUi("Login.ui",self) # load the login file and initialize the UI.
         self.Student.clicked.connect(self.stu)
         self.Teacher.clicked.connect(self.teach)
         self.Admin.clicked.connect(self.admin)
 
-    def stu(self):
+    def stu(self): # method to handle student button click.
         widget.setCurrentIndex(1)
     
-    def teach(self):
+    def teach(self): # method to handle teacher button click.
         widget.setCurrentIndex(2)
 
-    def admin(self):
+    def admin(self): # method to handle admin button click.
         widget.setCurrentIndex(3)
         
     pass
@@ -506,41 +549,47 @@ class StudentLogin(QtWidgets.QDialog):
     def back(self):
         widget.setCurrentIndex(0)
         
-    def login(self):
-        print(self.Username.text(), self.Password.text())
-        try :
-            for k,v in LoginIds.items():
-                if k == self.Username.text() and v == self.Password.text():
-                    item = get_element_heap(heap_tree,"Id", int(self.Password.text()))
-                    print(item)
+    def login(self): # for student login 
+        username = self.Username.text()
+        password = self.Password.text()
+        try:
+            # Iterate over the LoginIds dictionary to check if the entered credentials are valid
+            for k, v in LoginIds.items():
+                # Check if the username and password match the ones in LoginIds
+                if k == username and v == password:
+                    # Get the item from heap_tree with the given password (password is the ID)
+                    item = get_element_heap(heap_tree, "Id", int(password))
                     if item is not None:
+                        # Clear the rows in the student tableWidget and insert a new row
                         student.tableWidget.setRowCount(0)
                         student.tableWidget.insertRow(0)
-                        for j in range(1,5):
-                            student.tableWidget.setItem(0,j-1,QtWidgets.QTableWidgetItem(str(item[j])))
+                        for j in range(1, 5):
+                            student.tableWidget.setItem(0, j - 1, QtWidgets.QTableWidgetItem(str(item[j])))
                         widget.setCurrentIndex(5)
-                        if enrolled_Ids != []:
-                            if int(self.Password.text()) in enrolled_Ids:
+                        # Update the enrollment status label based on enrolled_Ids
+                        if enrolled_Ids:
+                            if int(password) in enrolled_Ids:
                                 student.statusLbl.setText("Enrolled")
                                 student.statusLbl.setStyleSheet("color: green")
                             else:
                                 student.statusLbl.setText("Not Enrolled")
                                 student.statusLbl.setStyleSheet("color: red")
                         return
-                    else:
-                        print("Invalid credentials")
-                else:
-                    print("Invalid credentials")
-        except:
-            print("Invalid credentials")
-        
+            # If no matching credentials found, show alert
+            msg = QtWidgets.QMessageBox()
+            msg.setIcon(QtWidgets.QMessageBox.Warning)
+            msg.setText("Invalid credentials")
+            msg.setWindowTitle("Login Error")
+            msg.exec_()
+        except Exception as e:
+            print("An error occurred:", str(e))    
             
         
         
     pass
 
 class StudentWindow(QtWidgets.QDialog):
-    def __init__(self):
+    def __init__(self): # for loading the UI 
         super(StudentWindow,self).__init__()
         loadUi("Student.ui",self)
         self.statusLbl = self.findChild(QtWidgets.QLabel, 'statusLbl')
@@ -550,11 +599,11 @@ class StudentWindow(QtWidgets.QDialog):
         self.Logout = self.findChild(QtWidgets.QPushButton, 'LogoutBtn')
         self.Logout.clicked.connect(self.logout)
     
-    def logout(self):
+    def logout(self): # intializing logout
         widget.setCurrentIndex(0)
         
 
-class TeacherLogin(QtWidgets.QDialog):
+class TeacherLogin(QtWidgets.QDialog): # for loading the UI
     def __init__(self):
         super(TeacherLogin,self).__init__()
         loadUi("LoginAll.ui",self)
@@ -565,24 +614,30 @@ class TeacherLogin(QtWidgets.QDialog):
         self.label.setText("Teacher Login")
         
 
-    def back(self):
+    def back(self): # switching when back button is clicked.
         widget.setCurrentIndex(0)
         
-        
-    def login(self):
-        try :
-            if self.Username.text() == "Teacher" and self.Password.text() == "teacher":
+    def login(self): # login logic for teacher login page
+        try:
+            if self.Username.text() == "Teacher" and self.Password.text() == "teacher": # if credentials match
                 widget.setCurrentIndex(6)
             else:
-                print("Invalid credentials")
-        except:
-            print("Invalid credentials")
-        
-        
-    pass
+                # if credentails do not match show error message
+                msg = QtWidgets.QMessageBox()
+                msg.setIcon(QtWidgets.QMessageBox.Warning)
+                msg.setText("Invalid credentials")
+                msg.setWindowTitle("Login Error")
+                msg.exec_()
+        except Exception as e:
+            # FOr any exception show error message
+            msg = QtWidgets.QMessageBox()
+            msg.setIcon(QtWidgets.QMessageBox.Warning)
+            msg.setText("Invalid credentials")
+            msg.setWindowTitle("Login Error")
+            msg.exec_()
 
 class TeacherWindow(QtWidgets.QDialog):
-    def __init__(self):
+    def __init__(self): # for initializing UI.
         super(TeacherWindow,self).__init__()
         loadUi("Teacher.ui",self)
         
@@ -597,7 +652,7 @@ class TeacherWindow(QtWidgets.QDialog):
         self.SchoolTxt.setHidden(True)
 
 
-    def get(self):
+    def get(self):  # Method to retrieve student details
         try :
             print("Get")
             if enrolled_Students != []:
@@ -618,14 +673,34 @@ class TeacherWindow(QtWidgets.QDialog):
                         self.YearTxt.setText(item[3])
                         self.SchoolTxt.setText(item[4])
                     else:
-                        print("Element not found in the heap")
+                        # If there are no enrolled students
+                        # Show a warning message indicating that students not found.
+                        msg = QtWidgets.QMessageBox()
+                        msg.setIcon(QtWidgets.QMessageBox.Warning)
+                        msg.setText("Students not found")
+                        msg.setWindowTitle("Failure")
+                        msg.exec_()
+            else:
+                # If enrolled has not occured.
+                # Show a warning message indicating that enrollment is yet to begin
+                msg = QtWidgets.QMessageBox()
+                msg.setIcon(QtWidgets.QMessageBox.Warning)
+                msg.setText("Enrollment is yet to begin.")
+                msg.setWindowTitle("Failure")
+                msg.exec_()
         except:
-            print("Failed")
+            # If an exception occurs
+            # Show a warning message indicating that the operation failed
+            msg = QtWidgets.QMessageBox()
+            msg.setIcon(QtWidgets.QMessageBox.Warning)
+            msg.setText("Get failed")
+            msg.setWindowTitle("Failure")
+            msg.exec_()
 
 
     
     def logout(self):
-        widget.setCurrentIndex(0)
+        widget.setCurrentIndex(0) # initializing logout
         
     pass
 
@@ -642,30 +717,42 @@ class AdminLogin(QtWidgets.QDialog):
     def back(self):
         widget.setCurrentIndex(0)
         
-    def login(self):
-        try :
-            if self.Username.text() == "Admin" and self.Password.text() == "admin":
+    def login(self): # login logic for admin
+        try:
+            if self.Username.text() == "Admin" and self.Password.text() == "admin": # credentials match 
                 widget.setCurrentIndex(4)
             else:
-                print("Invalid credentials")
-        except:
-            print("Invalid credentials")
-        
-    pass
+                # Show error message if invalid credentials are entered. 
+                msg = QtWidgets.QMessageBox()
+                msg.setIcon(QtWidgets.QMessageBox.Warning)
+                msg.setText("Invalid credentials")
+                msg.setWindowTitle("Login Error")
+                msg.exec_()
+        except Exception as e:
+            # Show error message if any exception occurs.
+            msg = QtWidgets.QMessageBox()
+            msg.setIcon(QtWidgets.QMessageBox.Warning)
+            msg.setText("Invalid credentials")
+            msg.setWindowTitle("Login Error")
+            msg.exec_()
 
 
 if __name__ == "__main__":
+    # Create an instance of QApplication to manage the GUI application
     app = QtWidgets.QApplication(sys.argv)
+    # Set the display name for the application
     app.setApplicationDisplayName("Registration Office")
     widget = QtWidgets.QStackedWidget()
+    # Set the window icon for the application
     widget.setWindowIcon(QtGui.QIcon("Logo.png"))
-    ui = Ui_MainWindow()
-    login = Login()
-    studentLogin = StudentLogin()
-    student = StudentWindow()
-    teacher = TeacherWindow()
-    teacherLogin = TeacherLogin()
-    adminLogin = AdminLogin()
+    ui = Ui_MainWindow()  # Main window UI
+    login = Login()  # Login dialog
+    studentLogin = StudentLogin()  # Student login dialog
+    student = StudentWindow()  # Student window
+    teacher = TeacherWindow()  # Teacher window
+    teacherLogin = TeacherLogin()  # Teacher login dialog
+    adminLogin = AdminLogin()  # Admin login dialog
+    # Add the dialogs to the stacked widget
     widget.addWidget(login)
     widget.addWidget(studentLogin)
     widget.addWidget(teacherLogin)
@@ -673,6 +760,7 @@ if __name__ == "__main__":
     widget.addWidget(ui)
     widget.addWidget(student)
     widget.addWidget(teacher)
+    # fixed height and width.
     widget.setFixedWidth(500)
     widget.setFixedHeight(700)
     widget.show()
