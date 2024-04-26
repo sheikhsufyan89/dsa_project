@@ -109,7 +109,7 @@ def makeheap(FileName = "student_records.csv"): # Function to create a heap tree
             fileInput . append ( tokens) # add the first token to the
          
     for i in range(1,len(fileInput)): # Skip the first line as it contains the column names
-        LoginIds[fileInput[i][1]] = fileInput[i][2] # Add the student name and id to the LoginIds dictionary
+        LoginIds[fileInput[i][2]] = fileInput[i][1] # Add the student name and id to the LoginIds dictionary
         fileInput[i][0] = int(fileInput[i][0]) # Convert the priority to an integer
         fileInput[i][2] = int(fileInput[i][2]) # Convert the id to an integer
         fileData.append(tuple(fileInput[i])) # Append the tuple to the fileData list
@@ -310,6 +310,10 @@ class Ui_MainWindow(QtWidgets.QDialog): # RO window class
         self.csvBtn = self.findChild(QtWidgets.QPushButton, 'csvBtn')
         self.addBtn = self.findChild(QtWidgets.QPushButton, 'addBtn')
         self.edit = self.findChild(QtWidgets.QPushButton, 'editBtn')
+        self.viewDB = self.findChild(QtWidgets.QPushButton, 'viewDB')
+        self.unviewDB = self.findChild(QtWidgets.QPushButton, 'unviewDB')
+        self.unviewDB.setHidden(True)
+        self.viewDB.setHidden(True)
         self.deleteBtn.setHidden(True)
         self.addBtn.setHidden(True)
         self.edit.setHidden(True)
@@ -317,6 +321,8 @@ class Ui_MainWindow(QtWidgets.QDialog): # RO window class
         self.addBtn.clicked.connect(self.add)
         self.edit.clicked.connect(self.update)
         self.csvBtn.clicked.connect(self.csvChange)
+        self.viewDB.clicked.connect(self.addHeapToEnrolled)
+        self.unviewDB.clicked.connect(self.deleteHeapToEnrolled)
         global heap_tree
         global permaHeap
 
@@ -352,7 +358,7 @@ class Ui_MainWindow(QtWidgets.QDialog): # RO window class
         inputDialog = QtWidgets.QInputDialog() # Open an input dialog
         name, ok = inputDialog.getText(self, 'Input Dialog', 'Enter name:' ) # Get the name
         if ok: # If Success
-            if name == "" or name in LoginIds: # If the name is empty or already exists
+            if name == "": # If the name is empty or already exists
                 msg = QtWidgets.QMessageBox()
                 msg.setIcon(QtWidgets.QMessageBox.Warning)
                 msg.setText("Invalid name")
@@ -367,8 +373,8 @@ class Ui_MainWindow(QtWidgets.QDialog): # RO window class
                 msg.setWindowTitle("Credentials error")
                 msg.exec_()
             elif id != "" and ok: # If the id is not empty
-                item = get_element_heap(heap_tree,"Id", int(id)) # Get the item with the id
-                if item is not None: # If the item is found
+                found,result = search( heap_tree, int(id))
+                if found == True: # If the item is found
                 # Show error message
                     msg = QtWidgets.QMessageBox()
                     msg.setIcon(QtWidgets.QMessageBox.Warning)
@@ -376,7 +382,7 @@ class Ui_MainWindow(QtWidgets.QDialog): # RO window class
                     msg.setWindowTitle("Error")
                     msg.exec_()
                     return
-                elif ok and item is None: # If the item is not found
+                elif ok and found == False: # If the item is not found
                     year, ok = inputDialog.getItem(self, 'Input Dialog', 'Select year:', ('Freshman', 'Sophomore', 'Junior', 'Senior'), 0, False) # Get the year
                     if ok and year is not None: # If the year is not empty
                         school, ok = inputDialog.getItem(self, 'Input Dialog', 'Select school:', ('Engineering', 'Humanities'), 0, False) # Get the school
@@ -393,7 +399,7 @@ class Ui_MainWindow(QtWidgets.QDialog): # RO window class
                                 priority = 4
                             insert_heap_tree(heap_tree, (priority, name, id, year, school)) # Insert the item into the heap tree
                             insert_heap_tree(permaHeap, (priority, name, id, year, school)) # Insert the item into the heap tree
-                            LoginIds[name] = str(id) # Add the name and id to the LoginIds dictionary
+                            LoginIds[str(id)] = name # Add the name and id to the LoginIds dictionary
                             print("Heap after insertion:")
                             print_array(heap_tree)
                             self.generate() # Generate the table
@@ -412,7 +418,7 @@ class Ui_MainWindow(QtWidgets.QDialog): # RO window class
                 self.generate() # Generate the table
                 print("LoginIds before deletion:")
                 print(LoginIds)
-                del LoginIds[deleted_element[1]] # Delete the name from the LoginIds dictionary
+                del LoginIds[str(deleted_element[2])] # Delete the name from the LoginIds dictionary
                 print("LoginIds after deletion:")
                 print(LoginIds)
             else: # If the element is not found
@@ -427,15 +433,16 @@ class Ui_MainWindow(QtWidgets.QDialog): # RO window class
         try:
             id, ok = QtWidgets.QInputDialog.getText(self, 'Input Dialog', 'Enter id:') 
             if ok and id != "":
-                item = get_element_heap(heap_tree,"Id", int(id)) # Get the item with the id
-                if item is None:
+                found,result = search( heap_tree, int(id))
+                # item = get_element_heap(heap_tree,"Id", int(id)) # Get the item with the id
+                if found == False:
                     msg = QtWidgets.QMessageBox()
                     msg.setIcon(QtWidgets.QMessageBox.Warning)
                     msg.setText("Student not found")
                     msg.setWindowTitle("Element not found")
                     msg.exec_()
                     return
-                updateCol, ok = QtWidgets.QInputDialog.getItem(self, 'Input Dialog', 'Select column to update:', ('Year', 'School'), 0, False) # Get the column to update
+                updateCol, ok = QtWidgets.QInputDialog.getItem(self, 'Input Dialog', 'Select column to update:', ('Name','Year', 'School'), 0, False) # Get the column to update
                 if ok and updateCol == 'School': # If the column to update is School
                     new_value, ok = QtWidgets.QInputDialog.getItem(self, 'Input Dialog', 'Select new school:', ('Engineering', 'Humanities'), 0, False) # Get the new value
                     if ok:
@@ -475,6 +482,23 @@ class Ui_MainWindow(QtWidgets.QDialog): # RO window class
                             self.generate()
                         else:
                             msg = QtWidgets.QMessageBox() # for generating error if update fails.
+                            msg.setIcon(QtWidgets.QMessageBox.Warning)
+                            msg.setText("Update failed")
+                            msg.setWindowTitle("Failure")
+                            msg.exec_()
+                elif ok and updateCol == 'Name':
+                    new_value, ok = QtWidgets.QInputDialog.getText(self, 'Input Dialog', 'Enter new name:')
+                    if ok:
+                        success = update_element_heap(heap_tree,"Id", int(id), 1, new_value)
+                        success = update_element_heap(permaHeap,"Id", int(id), 1, new_value)
+                        if success:
+                            LoginIds[str(id)] = new_value
+                            print("Updated element with new value:", new_value)
+                            print("Heap after update:")
+                            print_array(heap_tree)
+                            self.generate()
+                        else:
+                            msg = QtWidgets.QMessageBox()
                             msg.setIcon(QtWidgets.QMessageBox.Warning)
                             msg.setText("Update failed")
                             msg.setWindowTitle("Failure")
@@ -532,6 +556,7 @@ class Ui_MainWindow(QtWidgets.QDialog): # RO window class
             self.cap.setText(str(cap)) # Set the capacity text
             self.enroll_helper(cap) # Enroll the students
             self.enrollBtn.setProperty("enabled", False) # Set the enroll button to disabled
+            self.viewDB.setHidden(False) # Set the view database button to visible
         elif(cap <= 0):
             msg = QtWidgets.QMessageBox()
             msg.setIcon(QtWidgets.QMessageBox.Warning)
@@ -542,14 +567,13 @@ class Ui_MainWindow(QtWidgets.QDialog): # RO window class
         else:
             self.enroll_helper(cap) # Enroll the students
             self.enrollBtn.setProperty("enabled", False) # Set the enroll button to disabled
-
+            self.viewDB.setHidden(False) # Set the view database button to visible
 
     def generate(self): # Function to generate the table
         if self.genBtn.text() == "Regenerate Table from Database": 
             for i in range(len(enrolled_Students)):
-                item = get_element_heap(heap_tree,"Id", enrolled_Students[i][2])
-                print("Item:", item)
-                if item is None:
+                found,result = search( heap_tree, enrolled_Students[i][2])
+                if found == False:
                     insert_heap_tree(heap_tree, enrolled_Students[i]) # Insert the enrolled students back into the heap tree
         enrolled_Students.clear() # Clear the enrolled students
         enrolled_Ids.clear() # Clear the enrolled ids
@@ -565,10 +589,30 @@ class Ui_MainWindow(QtWidgets.QDialog): # RO window class
         self.genBtn.setProperty("text", "Generate Table from Database") # Set the text of the generate button
         self.tableWidget.setHidden(False) # Set the table widget to visible
         self.enrollBtn.setProperty("enabled", True) # Set the enroll button to enabled
+        self.viewDB.setHidden(True) # Set the view database button to visible
+        self.unviewDB.setHidden(True) # Set the unview database button to visible
         self.deleteBtn.setHidden(False) # Set the delete button to visible
         self.addBtn.setHidden(False) # Set the add button to visible
         self.edit.setHidden(False) # Set the edit button to visible
         
+    def addHeapToEnrolled(self):
+        cap = len(enrolled_Ids)
+        for i in range(cap,len(heap_tree)+cap):
+            self.tableWidget.insertRow(i) # Insert a row in the table widget
+            for j in range(1,5):
+                self.tableWidget.setItem(i,j-1,QtWidgets.QTableWidgetItem(str(heap_tree[i-cap][j])))
+                self.tableWidget.item(i,j-1).setBackground(QtGui.QColor(200, 0, 0)) # Set the background color of the item
+        self.viewDB.setHidden(True) # Set the view database button to visible
+        self.unviewDB.setHidden(False) # Set the unview database button to visible
+
+    def deleteHeapToEnrolled(self):
+        cap = len(enrolled_Ids)
+        for i in range(cap,len(heap_tree)+cap):
+            self.tableWidget.removeRow(cap) # Remove the row from the table widget
+        self.viewDB.setHidden(False) # Set the view database button to visible
+        self.unviewDB.setHidden(True) # Set the unview database button to visible
+
+
 class Login(QtWidgets.QDialog):
     def __init__(self):
         
@@ -611,12 +655,13 @@ class StudentLogin(QtWidgets.QDialog):
         print(LoginIds)
         try:
             # Iterate over the LoginIds dictionary to check if the entered credentials are valid
-            for k, v in LoginIds.items():
+            for v, k in LoginIds.items():
                 # Check if the username and password match the ones in LoginIds
-                if k == username and v == password:
+                if k == password and v == username:
                     # Get the item from heap_tree with the given password (password is the ID)
-                    item = get_element_heap(permaHeap, "Id", int(password))
-                    if item is not None:
+                    found, result = search(heap_tree, int(username)) 
+                    if found == True:
+                        item = result[0][0]
                         # Clear the rows in the student tableWidget and insert a new row
                         student.tableWidget.setRowCount(0)
                         student.tableWidget.insertRow(0)
