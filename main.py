@@ -638,7 +638,7 @@ class StudentLogin(QtWidgets.QDialog):
                         widget.setCurrentIndex(5)
                         # Update the enrollment status label based on enrolled_Ids
                         if enrolled_Ids:
-                            if int(password) in enrolled_Ids:
+                            if int(username) in enrolled_Ids:
                                 student.statusLbl.setText("Enrolled")
                                 student.statusLbl.setStyleSheet("color: green")
                             else:
