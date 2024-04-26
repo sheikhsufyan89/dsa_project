@@ -390,6 +390,44 @@ QPushButton:hover{
     <string>Change CSV</string>
    </property>
   </widget>
+  <widget class="QPushButton" name="viewDB">
+   <property name="geometry">
+    <rect>
+     <x>400</x>
+     <y>220</y>
+     <width>90</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton{background-color: rgb(35,35, 35);color:rgb(255,255,255);border-radius:5;}
+QPushButton:hover{
+ background-color: rgb(60,60,60)
+}</string>
+   </property>
+   <property name="text">
+    <string>View waitlist</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="unviewDB">
+   <property name="geometry">
+    <rect>
+     <x>400</x>
+     <y>220</y>
+     <width>90</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton{background-color: rgb(35,35, 35);color:rgb(255,255,255);border-radius:5;}
+QPushButton:hover{
+ background-color: rgb(60,60,60)
+}</string>
+   </property>
+   <property name="text">
+    <string>Hide waitlist</string>
+   </property>
+  </widget>
   <zorder>graphicsView</zorder>
   <zorder>verticalLayoutWidget</zorder>
   <zorder>addBtn</zorder>
@@ -399,6 +437,8 @@ QPushButton:hover{
   <zorder>deleteBtn</zorder>
   <zorder>LogoutBtn</zorder>
   <zorder>csvBtn</zorder>
+  <zorder>viewDB</zorder>
+  <zorder>unviewDB</zorder>
  </widget>
  <resources/>
  <connections/>
