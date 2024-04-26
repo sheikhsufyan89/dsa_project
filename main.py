@@ -157,56 +157,24 @@ def delete_element_heap(hT,col, val): # hT is the heap tree, col is the column t
     return delItem
 
 
-# Example usage:
-# Assuming heap_tree is already populated
-element_to_delete = 108  # Example element to delete
-deleted_element = delete_element_heap(heap_tree,"Id", element_to_delete)
-if deleted_element is not None:
-    print("Deleted element:", deleted_element)
-    print("Heap after deletion:")
-    print(heap_tree)
-
-
-
-# #get
-# def get_element_heap(hT,col,val): # hT is the heap tree, col is the column to be based on, val is the value to be retrieved
-#     basedOn = 1
-#     if col == "Id": # If the column is Id, set basedOn to 2
-#         basedOn = 2
-#     index = None
-#     for i in range(len(hT)): # Iterate through the heap tree
-#         if hT[i][basedOn] == val: # If the value is found
-#             index = i
-#             break
-    
-#     if index is None:
-#         print("Element not found in the heap")
-#         return None
-    
-#     return hT[index]
-
 # # Example usage:
 # # Assuming heap_tree is already populated
-# el_to_get = 105  # Example index to retrieve
-# retrieved_element = get_element_heap(heap_tree,"Id", el_to_get)
+# element_to_delete = 108  # Example element to delete
+# deleted_element = delete_element_heap(heap_tree,"Id", element_to_delete)
+# if deleted_element is not None:
+#     print("Deleted element:", deleted_element)
+#     print("Heap after deletion:")
+#     print(heap_tree)
+
+
+
+
+#example serach useage
+# el_to_Get = 111  # Example index to retrieve
+# priority = 1
+# retrieved_element = search(heap_tree,el_to_Get)
 # if retrieved_element is not None:
 #     print("Retrieved element :", retrieved_element)
-
-
-
-
-
-
-
-el_to_Get = 111  # Example index to retrieve
-priority = 1
-retrieved_element = search(heap_tree,el_to_Get)
-if retrieved_element is not None:
-    print("Retrieved element :", retrieved_element)
-
-
-
-
 
 
 
@@ -236,18 +204,18 @@ def update_element_heap(hT,col,val,update_col, new_value): # hT is the heap tree
     
     return True
 
-# Example usage:
-# Assuming heap_tree is already populated
-el_to_update = 105  # Example index to update
-new_value = "Updated Name"  # Example new value
-print("Updating")
-success = update_element_heap(heap_tree,"Id",el_to_update, 1, new_value)
-if success:
-    print("Updated element with new value:", new_value)
-    print("Heap after update:")
-    print(heap_tree)
-else:
-    print("Update failed.")
+# # Example usage:
+# # Assuming heap_tree is already populated
+# el_to_update = 105  # Example index to update
+# new_value = "Updated Name"  # Example new value
+# print("Updating")
+# success = update_element_heap(heap_tree,"Id",el_to_update, 1, new_value)
+# if success:
+#     print("Updated element with new value:", new_value)
+#     print("Heap after update:")
+#     print(heap_tree)
+# else:
+#     print("Update failed.")
 
 
 
