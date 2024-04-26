@@ -187,7 +187,7 @@ def update_element_heap(hT,col,val,update_col, new_value): # hT is the heap tree
     updated_element = list(old_value) # Convert the old value to a list
     updated_element[update_col] = new_value # Update the value
     hT[index] = tuple(updated_element) # Convert the updated value back to a tuple and update the heap tree
-
+    print(hT)
     # If the new value is greater, perform heapify up, otherwise heapify down
     if hT[index][0] > old_value[0]: 
         heapify_up(hT, index)
@@ -364,6 +364,7 @@ class Ui_MainWindow(QtWidgets.QDialog): # RO window class
 
     def delete(self): # Function to delete an element
         id,ok = QtWidgets.QInputDialog.getText(self, 'Input Dialog', 'Enter id:') # Get the id
+    
         if ok and id != "": # If the id is not empty
             deleted_element = delete_element_heap(heap_tree,"Id", int(id)) # Delete the element with the id
 
@@ -386,57 +387,67 @@ class Ui_MainWindow(QtWidgets.QDialog): # RO window class
 
 
     def update(self): # Function to update an element
-        id, ok = QtWidgets.QInputDialog.getText(self, 'Input Dialog', 'Enter id:') 
-        if ok and id != "":
-            item = get_element_heap(heap_tree,"Id", int(id)) # Get the item with the id
-            if item is None:
-                msg = QtWidgets.QMessageBox()
-                msg.setIcon(QtWidgets.QMessageBox.Warning)
-                msg.setText("Student not found")
-                msg.setWindowTitle("Element not found")
-                msg.exec_()
-                return
-            updateCol, ok = QtWidgets.QInputDialog.getItem(self, 'Input Dialog', 'Select column to update:', ('Year', 'School'), 0, False) # Get the column to update
-            if ok and updateCol == 'School': # If the column to update is School
-                new_value, ok = QtWidgets.QInputDialog.getItem(self, 'Input Dialog', 'Select new school:', ('Engineering', 'Humanities'), 0, False) # Get the new value
-                if ok:
-                    success = update_element_heap(heap_tree,"Id", int(id), 4, new_value) # Update the element
-                    if success: # If the update is successful
-                        print("Updated element with new value:", new_value)
-                        print("Heap after update:")
-                        print_array(heap_tree)
-                        self.generate() # Generate the table
-                    else:
-                        msg = QtWidgets.QMessageBox() # for generating error if update fails.
-                        msg.setIcon(QtWidgets.QMessageBox.Warning)
-                        msg.setText("Update failed")
-                        msg.setWindowTitle("Failure")
-                        msg.exec_()
-            elif ok and updateCol == 'Year': # If the column to update is Year
-                new_value, ok = QtWidgets.QInputDialog.getItem(self, 'Input Dialog', 'Select new year:', ('Freshman', 'Sophomore', 'Junior', 'Senior'), 0, False) # Get the new value
-                if ok:
-                    priority = 1
-                    if new_value == 'Freshman':
+        try:
+            id, ok = QtWidgets.QInputDialog.getText(self, 'Input Dialog', 'Enter id:') 
+            if ok and id != "":
+                item = get_element_heap(heap_tree,"Id", int(id)) # Get the item with the id
+                if item is None:
+                    msg = QtWidgets.QMessageBox()
+                    msg.setIcon(QtWidgets.QMessageBox.Warning)
+                    msg.setText("Student not found")
+                    msg.setWindowTitle("Element not found")
+                    msg.exec_()
+                    return
+                updateCol, ok = QtWidgets.QInputDialog.getItem(self, 'Input Dialog', 'Select column to update:', ('Year', 'School'), 0, False) # Get the column to update
+                if ok and updateCol == 'School': # If the column to update is School
+                    new_value, ok = QtWidgets.QInputDialog.getItem(self, 'Input Dialog', 'Select new school:', ('Engineering', 'Humanities'), 0, False) # Get the new value
+                    if ok:
+                        success = update_element_heap(heap_tree,"Id", int(id), 4, new_value) # Update the element
+                        success = update_element_heap(permaHeap,"Id", int(id), 4, new_value) # Update the element
+                        if success: # If the update is successful
+                            print("Updated element with new value:", new_value)
+                            print("Heap after update:")
+                            print_array(heap_tree)
+                            self.generate() # Generate the table
+                        else:
+                            msg = QtWidgets.QMessageBox() # for generating error if update fails.
+                            msg.setIcon(QtWidgets.QMessageBox.Warning)
+                            msg.setText("Update failed")
+                            msg.setWindowTitle("Failure")
+                            msg.exec_()
+                elif ok and updateCol == 'Year': # If the column to update is Year
+                    new_value, ok = QtWidgets.QInputDialog.getItem(self, 'Input Dialog', 'Select new year:', ('Freshman', 'Sophomore', 'Junior', 'Senior'), 0, False) # Get the new value
+                    if ok:
                         priority = 1
-                    elif new_value == 'Sophomore':
-                        priority = 2
-                    elif new_value == 'Junior':
-                        priority = 3
-                    elif new_value == 'Senior':
-                        priority = 4
-                    success = update_element_heap(heap_tree,"Id", int(id), 0, priority)
-                    success = update_element_heap(heap_tree,"Id", int(id), 3, new_value)
-                    if success:
-                        print("Updated element with new value:", new_value)
-                        print("Heap after update:")
-                        print_array(heap_tree)
-                        self.generate()
-                    else:
-                        msg = QtWidgets.QMessageBox() # for generating error if update fails.
-                        msg.setIcon(QtWidgets.QMessageBox.Warning)
-                        msg.setText("Update failed")
-                        msg.setWindowTitle("Failure")
-                        msg.exec_()
+                        if new_value == 'Freshman':
+                            priority = 1
+                        elif new_value == 'Sophomore':
+                            priority = 2
+                        elif new_value == 'Junior':
+                            priority = 3
+                        elif new_value == 'Senior':
+                            priority = 4
+                        success = update_element_heap(heap_tree,"Id", int(id), 0, priority)
+                        success = update_element_heap(heap_tree,"Id", int(id), 3, new_value)
+                        success = update_element_heap(permaHeap,"Id", int(id), 0, priority)
+                        success = update_element_heap(permaHeap,"Id", int(id), 3, new_value)
+                        if success:
+                            print("Updated element with new value:", new_value)
+                            print("Heap after update:")
+                            print_array(heap_tree)
+                            self.generate()
+                        else:
+                            msg = QtWidgets.QMessageBox() # for generating error if update fails.
+                            msg.setIcon(QtWidgets.QMessageBox.Warning)
+                            msg.setText("Update failed")
+                            msg.setWindowTitle("Failure")
+                            msg.exec_()
+        except:
+            msg = QtWidgets.QMessageBox()
+            msg.setIcon(QtWidgets.QMessageBox.Warning)
+            msg.setText("Enter a valid Id")
+            msg.setWindowTitle("Error")
+            msg.exec_()
 
 
     def enroll_helper(self,cap):
@@ -566,7 +577,7 @@ class StudentLogin(QtWidgets.QDialog):
                 # Check if the username and password match the ones in LoginIds
                 if k == username and v == password:
                     # Get the item from heap_tree with the given password (password is the ID)
-                    item = get_element_heap(heap_tree, "Id", int(password))
+                    item = get_element_heap(permaHeap, "Id", int(password))
                     if item is not None:
                         # Clear the rows in the student tableWidget and insert a new row
                         student.tableWidget.setRowCount(0)
