@@ -14,6 +14,52 @@ FileName = "student_records.csv" # File name for student records
 
 
 
+def heapify_up(hT, i): # Function to heapify up
+    parent = (i - 1) // 2 # Calculate the parent index
+    if parent >= 0 and hT[i][0] > hT[parent][0]: # If the value is greater than its parent
+        hT[i], hT[parent] = hT[parent], hT[i] # Swap the value with its parent
+        heapify_up(hT, parent) # Recursively call heapify up
+
+def heapify_down(hT, i): # Function to heapify down
+    left_child = 2 * i + 1 # Calculate the left child index
+    right_child = 2 * i + 2 # Calculate the right child index
+    largest = i # Initialize largest to i
+
+    if left_child < len(hT) and hT[left_child][0] > hT[largest][0]: # If the left child is greater than the largest
+        largest = left_child # Set largest to left child
+
+    if right_child < len(hT) and hT[right_child][0] > hT[largest][0]: # If the right child is greater than the largest
+        largest = right_child # Set largest to right child
+
+    if largest != i: # If largest is not i
+        hT[i], hT[largest] = hT[largest], hT[i] # Swap the value with the largest
+        heapify_down(hT, largest) # Recursively call heapify down
+
+def search(heap,value):
+        print("Inorder Traversal:")
+        output = []
+        return (search_recursive(heap,0,value,output),output)
+
+def search_recursive(heap, index,value,output):
+    if index >= len(heap):
+        return False
+
+    left_child_index = 2 * index + 1
+    right_child_index = 2 * index + 2
+
+    if int(heap[index][2]) == value:
+        output.append((heap[index],index))
+        return True
+
+    left_child_index = 2 * index + 1
+    right_child_index = 2 * index + 2
+
+    return search_recursive(heap, left_child_index,value,output) or search_recursive(heap, right_child_index,value,output)
+
+
+
+
+
 
 
 def insert_heap_tree(hT, val):  # hT is the heap tree, val is the value to be inserted
@@ -22,10 +68,11 @@ def insert_heap_tree(hT, val):  # hT is the heap tree, val is the value to be in
         hT.append(val)
     else:
         hT.append(val)
-        i = tree_size
-        while i != 0 and hT[i][0] > hT[(i - 1) // 2][0]: # If the value is greater than its parent, swap the value with its parent
-            hT[i], hT[(i - 1) // 2] = hT[(i - 1) // 2], hT[i]   # Swap the value with its parent
-            i = (i - 1) // 2 # Move to the parent index
+        heapify_up(hT, len(hT)-1) # Perform heapify up
+        # i = tree_size
+        # while i != 0 and hT[i][0] > hT[(i - 1) // 2][0]: # If the value is greater than its parent, swap the value with its parent
+        #     hT[i], hT[(i - 1) // 2] = hT[(i - 1) // 2], hT[i]   # Swap the value with its parent
+        #     i = (i - 1) // 2 # Move to the parent index
 
 def print_array(hT):
     for i in range(len(hT)):
@@ -91,14 +138,12 @@ def delete_element_heap(hT,col, val): # hT is the heap tree, col is the column t
     if col == "Id": # If the column is Id, set basedOn to 2
         basedOn = 2
     index = None # Initialize index to None
-    for i in range(len(hT)): # Iterate through the heap tree
-        if hT[i][basedOn] == val: # If the value is found
-            index = i
-            break
-    
-    if index is None: # If the value is not found
+    found,result = search( heap_tree, val)
+    print(found,result)
+    if found == False:
         print("Element not found in the heap")
         return None
+    index = result[0][1]
     
     delItem = hT[index] # Get the value to be deleted
 
@@ -107,58 +152,38 @@ def delete_element_heap(hT,col, val): # hT is the heap tree, col is the column t
     
     if index < len(hT): # If the index is less than the length of the heap tree
         heapify_down(hT, index) # Perform heapify down
-        heapify_up(hT, index) # Perform heapify up
+        # heapify_up(hT, index) # Perform heapify up
     
     return delItem
 
-def heapify_up(hT, i): # Function to heapify up
-    parent = (i - 1) // 2 # Calculate the parent index
-    if parent >= 0 and hT[i][0] > hT[parent][0]: # If the value is greater than its parent
-        hT[i], hT[parent] = hT[parent], hT[i] # Swap the value with its parent
-        heapify_up(hT, parent) # Recursively call heapify up
 
-def heapify_down(hT, i): # Function to heapify down
-    left_child = 2 * i + 1 # Calculate the left child index
-    right_child = 2 * i + 2 # Calculate the right child index
-    largest = i # Initialize largest to i
-
-    if left_child < len(hT) and hT[left_child][0] > hT[largest][0]: # If the left child is greater than the largest
-        largest = left_child # Set largest to left child
-
-    if right_child < len(hT) and hT[right_child][0] > hT[largest][0]: # If the right child is greater than the largest
-        largest = right_child # Set largest to right child
-
-    if largest != i: # If largest is not i
-        hT[i], hT[largest] = hT[largest], hT[i] # Swap the value with the largest
-        heapify_down(hT, largest) # Recursively call heapify down
-
-# # Example usage:
-# # Assuming heap_tree is already populated
-# element_to_delete = 108  # Example element to delete
-# deleted_element = delete_element_heap(heap_tree,"Id", element_to_delete)
-# if deleted_element is not None:
-#     print("Deleted element:", deleted_element)
-#     print("Heap after deletion:")
-#     print(heap_tree)
+# Example usage:
+# Assuming heap_tree is already populated
+element_to_delete = 108  # Example element to delete
+deleted_element = delete_element_heap(heap_tree,"Id", element_to_delete)
+if deleted_element is not None:
+    print("Deleted element:", deleted_element)
+    print("Heap after deletion:")
+    print(heap_tree)
 
 
 
-#get
-def get_element_heap(hT,col,val): # hT is the heap tree, col is the column to be based on, val is the value to be retrieved
-    basedOn = 1
-    if col == "Id": # If the column is Id, set basedOn to 2
-        basedOn = 2
-    index = None
-    for i in range(len(hT)): # Iterate through the heap tree
-        if hT[i][basedOn] == val: # If the value is found
-            index = i
-            break
+# #get
+# def get_element_heap(hT,col,val): # hT is the heap tree, col is the column to be based on, val is the value to be retrieved
+#     basedOn = 1
+#     if col == "Id": # If the column is Id, set basedOn to 2
+#         basedOn = 2
+#     index = None
+#     for i in range(len(hT)): # Iterate through the heap tree
+#         if hT[i][basedOn] == val: # If the value is found
+#             index = i
+#             break
     
-    if index is None:
-        print("Element not found in the heap")
-        return None
+#     if index is None:
+#         print("Element not found in the heap")
+#         return None
     
-    return hT[index]
+#     return hT[index]
 
 # # Example usage:
 # # Assuming heap_tree is already populated
@@ -169,25 +194,40 @@ def get_element_heap(hT,col,val): # hT is the heap tree, col is the column to be
 
 
 
+
+
+
+
+el_to_Get = 111  # Example index to retrieve
+priority = 1
+retrieved_element = search(heap_tree,el_to_Get)
+if retrieved_element is not None:
+    print("Retrieved element :", retrieved_element)
+
+
+
+
+
+
+
+
 #update
 def update_element_heap(hT,col,val,update_col, new_value): # hT is the heap tree, col is the column to be based on, val is the value to be updated, update_col is the column to be updated, new_value is the new value
     basedOn = 1
     if col == "Id": # If the column is Id, set basedOn to 2
         basedOn = 2
     index = None
-    for i in range(len(hT)): # Iterate through the heap tree
-        if hT[i][basedOn] == val: # If the value is found
-            index = i
-            break
-    if index is None:
+    found,result = search( heap_tree, val)
+    print(found,result)
+    if found == False:
         print("Element not found in the heap")
         return None
+    index = result[0][1] 
     
     old_value = hT[index] # Get the old value
     updated_element = list(old_value) # Convert the old value to a list
     updated_element[update_col] = new_value # Update the value
     hT[index] = tuple(updated_element) # Convert the updated value back to a tuple and update the heap tree
-    print(hT)
     # If the new value is greater, perform heapify up, otherwise heapify down
     if hT[index][0] > old_value[0]: 
         heapify_up(hT, index)
@@ -196,21 +236,18 @@ def update_element_heap(hT,col,val,update_col, new_value): # hT is the heap tree
     
     return True
 
-# # Example usage:
-# # Assuming heap_tree is already populated
-# el_to_update = 105  # Example index to update
-# new_value = "Updated Name"  # Example new value
-# success = update_element_heap(heap_tree,"Id",el_to_update, 1, new_value)
-# if success:
-#     print("Updated element with new value:", new_value)
-#     print("Heap after update:")
-#     print(heap_tree)
-# else:
-#     print("Update failed.")
-
-
-
-
+# Example usage:
+# Assuming heap_tree is already populated
+el_to_update = 105  # Example index to update
+new_value = "Updated Name"  # Example new value
+print("Updating")
+success = update_element_heap(heap_tree,"Id",el_to_update, 1, new_value)
+if success:
+    print("Updated element with new value:", new_value)
+    print("Heap after update:")
+    print(heap_tree)
+else:
+    print("Update failed.")
 
 
 
