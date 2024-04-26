@@ -502,6 +502,7 @@ class Ui_MainWindow(QtWidgets.QDialog): # RO window class
             print("Max element:", max_element)
             # Remove the max element from the heap
             delete_element_heap(heap_tree, "Id", max_element[2]) # Delete the element from the heap tree
+        print(heap_tree)
         self.tableWidget.setHorizontalHeaderLabels([ "Name", "Id", "Year", "School"]) # Set the horizontal header labels
         self.genBtn.setProperty("text", "Regenerate Table from Database") # Set the text of the generate button
         self.addBtn.setHidden(True) # Set the add button to hidden
