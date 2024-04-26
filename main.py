@@ -627,7 +627,7 @@ class StudentLogin(QtWidgets.QDialog):
                 # Check if the username and password match the ones in LoginIds
                 if k == password and v == username:
                     # Get the item from heap_tree with the given password (password is the ID)
-                    found, result = search(heap_tree, int(username)) 
+                    found, result = search(permaHeap, int(username)) 
                     if found == True:
                         item = result[0][0]
                         # Clear the rows in the student tableWidget and insert a new row
