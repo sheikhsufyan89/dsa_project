@@ -142,7 +142,7 @@ def delete_element_heap(hT,col, val): # hT is the heap tree, col is the column t
     if col == "Id": # If the column is Id, set basedOn to 2
         basedOn = 2
     index = None # Initialize index to None
-    found,result = search( heap_tree, val)
+    found,result = search( hT, val)
     print(found,result)
     if found == False:
         print("Element not found in the heap")
@@ -189,7 +189,7 @@ def update_element_heap(hT,col,val,update_col, new_value): # hT is the heap tree
     if col == "Id": # If the column is Id, set basedOn to 2
         basedOn = 2
     index = None
-    found,result = search( heap_tree, val)
+    found,result = search( hT, val)
     print(found,result)
     if found == False:
         print("Element not found in the heap")
@@ -382,11 +382,12 @@ class Ui_MainWindow(QtWidgets.QDialog): # RO window class
     
         if ok and id != "": # If the id is not empty
             deleted_element = delete_element_heap(heap_tree,"Id", int(id)) # Delete the element with the id
-
+            deleted_element = delete_element_heap(permaHeap,"Id", int(id)) # Delete the element with the id
+            print("Heap after deletion:")
+            print(heap_tree)
+            print(permaHeap)
             if deleted_element is not None: # If the element is found
                 print("Deleted element:", deleted_element)
-                print("Heap after deletion:")
-                print_array(heap_tree)
                 self.generate() # Generate the table
                 print("LoginIds before deletion:")
                 print(LoginIds)
@@ -634,6 +635,7 @@ class StudentLogin(QtWidgets.QDialog):
                     found, result = search(permaHeap, int(username)) 
                     if found == True:
                         item = result[0][0]
+                        print(item)
                         # Clear the rows in the student tableWidget and insert a new row
                         student.tableWidget.setRowCount(0)
                         student.tableWidget.insertRow(0)
