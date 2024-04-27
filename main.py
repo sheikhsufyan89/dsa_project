@@ -14,12 +14,16 @@ FileName = "student_records.csv" # File name for student records
 
 
 
-def heapify_up(hT, i): # Function to heapify up
+# heapify_up is called with the index of the newly added element (len(self.heap) - 1) to move it up the heap 
+# if its value is larger than its parent's, ensuring the max element remains at the root.
+def heapify_up(hT, i): 
     parent = (i - 1) // 2 # Calculate the parent index
     if parent >= 0 and hT[i][0] > hT[parent][0]: # If the value is greater than its parent
         hT[i], hT[parent] = hT[parent], hT[i] # Swap the value with its parent
         heapify_up(hT, parent) # Recursively call heapify up
 
+# when an element is deleted, the last element in the heap is moved to the deleted element's position.
+# Then heapify_down is called on that index to ensure the remaining elements satisfy the heap property.
 def heapify_down(hT, i): # Function to heapify down
     left_child = 2 * i + 1 # Calculate the left child index
     right_child = 2 * i + 2 # Calculate the right child index
