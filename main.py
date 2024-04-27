@@ -382,7 +382,7 @@ class Ui_MainWindow(QtWidgets.QDialog): # RO window class
     
         if ok and id != "": # If the id is not empty
             deleted_element = delete_element_heap(heap_tree,"Id", int(id)) # Delete the element with the id
-            deleted_element = delete_element_heap(permaHeap,"Id", int(id)) # Delete the element with the id
+            delete_element_heap(permaHeap,"Id", int(id)) # Delete the element with the id
             print("Heap after deletion:")
             print(heap_tree)
             print(permaHeap)
